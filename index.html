@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anggaran AI/AO UP2D Jatim</title>
+<link rel="icon" href="logo-pln.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: sidebar navy di kiri, bilah judul di atas, area kerja bergaris mint. Ringkasan dulu, detail di bawah. */
+:root{
+  --bg:#eef5f4; --bg2:#e3efed; --panel:#ffffff; --ink:#122433; --muted:#5a6b78; --line:#d6e2e4;
+  --navy:#0b5e87; --navy-d:#073f5b; --teal:#00a4a7; --teal-soft:#dff3f2; --bolt:#ffc72c;
+  --accent:#0b5e87; --accent-soft:#e2eff6;
+  --good:#16794a; --good-soft:#e0f3e8; --warn:#9a6200; --warn-soft:#fdf1d8; --bad:#c00000; --bad-soft:#fde6e4;
+  --bar1:#0b5e87; --bar2:#00a4a7; --bar3:#c9d9de;
+  --shadow:0 1px 2px rgba(11,40,60,.06),0 4px 14px rgba(11,40,60,.06);
+  --display:Poppins,"Segoe UI",Arial,sans-serif; --body:"Plus Jakarta Sans","Segoe UI",Arial,sans-serif; --mono:"Plus Jakarta Sans","Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c1820; --bg2:#10202a; --panel:#13242f; --ink:#e3eef2; --muted:#93a8b4; --line:#24394a;
+  --accent:#5cb8e6; --accent-soft:#153447; --teal-soft:#0f3536; --good:#5fd197; --good-soft:#123426;
+  --warn:#f0b54a; --warn-soft:#3a2c10; --bad:#ff8a80; --bad-soft:#3d1a18; --bar1:#5cb8e6; --bar2:#22c4c6; --bar3:#2c4352;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0c1820; --bg2:#10202a; --panel:#13242f; --ink:#e3eef2; --muted:#93a8b4; --line:#24394a;
+  --accent:#5cb8e6; --accent-soft:#153447; --teal-soft:#0f3536; --good:#5fd197; --good-soft:#123426;
+  --warn:#f0b54a; --warn-soft:#3a2c10; --bad:#ff8a80; --bad-soft:#3d1a18; --bar1:#5cb8e6; --bar2:#22c4c6; --bar3:#2c4352;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.55 var(--body)}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100%}
+.app.solo{grid-template-columns:minmax(0,1fr)}
+aside#nav{background:linear-gradient(180deg,var(--navy) 0%,var(--navy-d) 100%);color:#e6f2f8;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:18px 12px;gap:4px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:10px}
+.brand .mark{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);display:grid;place-items:center;flex:none}
+.brand b{font:600 15px/1.2 var(--display);color:#fff;display:block}.brand small{color:#a9cde0;font-size:11.5px}
+aside#nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;color:#cfe4ef;text-decoration:none;font-weight:500;font-size:13.5px}
+aside#nav a svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+aside#nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+aside#nav a.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+aside#nav .sep{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#7fb1c9;padding:14px 12px 4px}
+.navfoot{margin-top:auto;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:6px}
+.navfoot #who{color:#fff;font-weight:600;font-size:13px}
+.navfoot button{background:transparent;border:1px solid rgba(255,255,255,.25);color:#e6f2f8;text-align:left}
+.navfoot button:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.4)}
+.shell{display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 28px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.topbar h1{font:600 18px var(--display);margin:0}.topbar .sub{color:var(--muted);font-size:12px}
+.grow{flex:1}
+main{padding:24px 28px 40px;max-width:1440px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:18px;
+  background-image:linear-gradient(180deg,var(--bg2),transparent 260px);background-repeat:no-repeat}
+h2{font:600 21px/1.3 var(--display);margin:0;text-wrap:balance}
+h3{font:600 15px var(--display);margin:0 0 10px}
+.pagehead{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}.pagehead p{margin:2px 0 0;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px 14px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc,var(--navy))}
+.tile .ic{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--tcs,var(--accent-soft));color:var(--tc,var(--navy))}
+.tile .ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tile .l{color:var(--muted);font-size:12px;font-weight:500}.tile .v{font:600 24px/1.25 var(--display);font-variant-numeric:tabular-nums;margin-top:2px}
+.tile .n{font-size:12px;color:var(--muted)}
+.tile .bar{height:5px;border-radius:3px;background:var(--bg);margin-top:8px;overflow:hidden}.tile .bar i{display:block;height:100%;background:var(--tc,var(--navy))}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.scroll{overflow-x:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;background:var(--bg);position:sticky;top:0}
+th:first-child{border-top-left-radius:8px}th:last-child{border-top-right-radius:8px}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--bg) 45%,transparent)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--accent-soft)!important}
+tr.tot td{font-weight:700;border-top:2px solid var(--line);background:var(--bg)!important}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap;background:var(--accent-soft);color:var(--accent)}
+.chip.good{background:var(--good-soft);color:var(--good)}.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}.chip.mute{background:var(--bg);color:var(--muted)}.chip.teal{background:var(--teal-soft);color:var(--teal)}
+.meter{height:7px;background:var(--bg);border-radius:4px;overflow:hidden;min-width:70px}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--navy));border-radius:4px}.meter i.over{background:var(--bad)}
+button,.btn{font:600 13px var(--body);padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+button.primary{background:var(--navy);border-color:var(--navy);color:#fff}button.primary:hover{background:var(--navy-d)}
+button.ghost{border-color:transparent;background:transparent;color:var(--accent);padding:4px 8px}
+button:hover{border-color:var(--accent)}button:disabled{opacity:.6;cursor:wait}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+input,select,textarea{font:13px var(--body);padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--ink);width:100%}
+input[readonly]{background:var(--bg)}
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:500}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.form .wide{grid-column:1/-1}
+.msg{padding:9px 13px;border-radius:10px;font-size:13px}
+.msg.bad{background:var(--bad-soft);color:var(--bad)}.msg.warn{background:var(--warn-soft);color:var(--warn)}.msg.good{background:var(--good-soft);color:var(--good)}.msg.info{background:var(--teal-soft);color:var(--ink);border-left:3px solid var(--teal);border-radius:0 10px 10px 0}
+.overlay{position:fixed;inset:0;background:rgba(6,25,38,.5);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:20}
+.overlay.on{display:flex}
+.modal{background:var(--panel);border-radius:16px;max-width:980px;width:100%;padding:22px 24px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modal .head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:12px}
+.toast{position:fixed;right:18px;bottom:18px;z-index:30;max-width:380px;box-shadow:var(--shadow)}
+.muted{color:var(--muted)}.mono{font-variant-numeric:tabular-nums}
+.timeline{border-left:2px solid var(--line);margin-left:6px;padding-left:16px;display:flex;flex-direction:column;gap:12px}
+.timeline>div{position:relative}.timeline>div::before{content:"";position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);gap:18px}
+.chartbox{position:relative;height:270px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.gauge{display:flex;flex-direction:column;align-items:center;gap:6px}
+.funnel{display:flex;flex-direction:column;gap:9px}.funnel .f{display:grid;grid-template-columns:120px 1fr 120px;gap:10px;align-items:center;font-size:12.5px}
+.funnel .f .b{height:22px;border-radius:6px;background:var(--bg);overflow:hidden}.funnel .f .b i{display:block;height:100%;border-radius:6px}
+.prkhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;margin:-18px -18px 14px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--teal-soft),transparent);border-radius:14px 14px 0 0}
+.prkhead .code{font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+.logincard{display:grid;grid-template-columns:1fr 1fr;max-width:860px;width:100%;background:var(--panel);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(7,63,91,.18)}
+.loginbrand{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-d) 70%);color:#fff;padding:36px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.loginbrand h2{color:#fff;font-size:24px}.loginbrand p{color:#cfe4ef;margin:0}
+.loginbrand .chev{position:absolute;right:-30px;bottom:-20px;font:700 220px/1 var(--display);color:rgba(255,255,255,.06);letter-spacing:-30px}
+.loginform{padding:36px;display:flex;flex-direction:column;gap:12px}
+/* Logo PLN dan Danantara: file resmi di repo (logo-pln.png, logo-danantara.png); tersembunyi bila belum diunggah */
+.logos{background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:center;gap:14px;margin:0 4px 10px}
+.logos img{height:34px;max-width:104px;object-fit:contain}
+.logos:not(:has(img)){display:none}
+.logos .div{width:1px;align-self:stretch;background:#d6e2e4}
+.logos:not(:has(img+.div+img)) .div{display:none}
+.loginbrand .logos{justify-content:flex-start;margin:0 0 6px;align-self:flex-start;padding:10px 16px}
+.loginbrand .logos img{height:40px}
+/* Pengingat kontrak */
+.bell{position:relative;display:inline-flex;align-items:center;gap:6px}
+.bell .cnt{background:var(--bad);color:#fff;border-radius:999px;font-size:11px;padding:0 6px;line-height:18px;min-width:18px;text-align:center}
+.chip.lewat{background:var(--bad);color:#fff}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{border-radius:999px;padding:5px 12px;font-size:12.5px}.seg button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.seg button .n{opacity:.75;margin-left:4px}
+.remind{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.remind .d{font:700 20px/1 var(--display);min-width:64px;text-align:center;padding:8px 6px;border-radius:10px}
+.remind .d small{display:block;font:500 10.5px var(--body);margin-top:3px}
+.lv-lewat .d{background:var(--bad);color:#fff}.lv-kritis .d{background:var(--bad-soft);color:var(--bad)}.lv-segera .d{background:var(--warn-soft);color:var(--warn)}.lv-pantau .d{background:var(--teal-soft);color:var(--teal)}
+/* Batang bertumpuk: proyeksi pagu dan tahapan fisik */
+.stack{display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--bg);min-width:90px}
+.stack{position:relative}.stack i{display:block;height:100%}
+.stack.over{box-shadow:inset 0 0 0 1px var(--bad)}.stack b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--bad)}
+button.mini{padding:4px 9px;font-size:12px;white-space:nowrap}
+.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:340px;min-width:200px}
+.stack.big{height:24px;border-radius:8px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.dots{display:flex;gap:4px}.dots i{width:22px;height:8px;border-radius:4px;background:var(--bg);border:1px solid var(--line)}.dots i.on{background:var(--teal);border-color:var(--teal)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:900px){.app{grid-template-columns:1fr}aside#nav{position:static;height:auto;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;padding:10px}
+ .brand,.navfoot,aside#nav .sep{display:none}aside#nav a{white-space:nowrap}.grid3{grid-template-columns:1fr}.logincard{grid-template-columns:1fr}.loginbrand{padding:24px}}
+@media (max-width:520px){main{padding:14px}.topbar{padding:12px 14px}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<aside id="nav">
+  <div class="logos"><img src="logo-pln.png" alt="PLN" onerror="this.remove()"><span class="div"></span><img src="logo-danantara.png" alt="Danantara Indonesia" onerror="this.remove()"></div>
+  <div class="brand"><div class="mark"><svg width="20" height="22" viewBox="0 0 20 22" aria-hidden="true"><path d="M12 1L2 13h7l-2 8 11-13h-7z" fill="#ffc72c"/></svg></div><div><b>Anggaran AI/AO</b><small>UP2D Jawa Timur</small></div></div>
+  <a href="#dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v8H4zM14 4h6v5h-6zM14 13h6v7h-6zM4 16h6v4H4z"/></svg>Dashboard</a>
+  <div class="sep">Perencanaan</div>
+  <a href="#pagu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v12H3zM3 7l3-3h12l3 3M16 13h2"/></svg>Pagu PRK</a><a href="#rencana"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 12h6M9 16h4"/></svg>Rencana kontrak</a><a href="#material"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h7v7H4zM13 7h7v7h-7zM8 14v6M16 14v6M4 20h16"/></svg>Rencana material</a>
+  <div class="sep">Pelaksanaan</div>
+  <a href="#paket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>Paket</a><a href="#kontrak"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg>Kontrak dan amandemen</a><a href="#khs"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 4-9 4-9-4zM3 12l9 4 9-4M3 16l9 4 9-4"/></svg>KHS</a><a href="#fisik"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M5 15l4-4 4 3 6-7"/></svg>Progres fisik</a><a href="#progres"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/></svg>Volume BoQ</a><a href="#bayar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v12H3zM3 10h18M7 15h3"/></svg>Pembayaran</a>
+  <div class="navfoot"><span id="who"></span><button id="btnPass" type="button" hidden>Ganti password</button><button id="btnLogout" type="button" hidden>Keluar</button></div>
+</aside>
+<div class="shell">
+  <div class="topbar" id="topbar"><div><h1 id="ptitle">Pengelolaan Anggaran AI/AO</h1><div class="sub">UP2D Jawa Timur · Tahun anggaran 2026</div></div><div class="grow"></div>
+    <span id="mode" class="chip mute">Memuat</span><button id="btnIngat" type="button" class="bell" hidden title="Kontrak mendekati atau melewati tanggal akhir"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>Pengingat<span class="cnt" id="ingatN">0</span></button><button id="btnReload" type="button">Muat ulang</button><button id="btnSetting" type="button">Pengaturan</button></div>
+  <main id="view"><div class="panel">Memuat data…</div></main>
+</div>
+</div>
+<div class="overlay" id="ov"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+/* ===== Konfigurasi ===== */
+const DEMO_DATA = /*__DEMO_DATA__*/null;
+const TODAY = new Date().toISOString().slice(0,10);
+const UP3 = ['MDR','JMB','PNG','PSR','MDN','SBS','MJK','MLG','BJG','SBU','SDA','KDR','BWI','GSK','STB','SBB'];
+const UP3_NAMA = {MDR:'Madura',JMB:'Jember',PNG:'Ponorogo',PSR:'Pasuruan',MDN:'Madiun',SBS:'Surabaya Selatan',MJK:'Mojokerto',MLG:'Malang',BJG:'Bojonegoro',SBU:'Surabaya Utara',SDA:'Sidoarjo',KDR:'Kediri',BWI:'Banyuwangi',GSK:'Gresik',STB:'Situbondo',SBB:'Surabaya Barat',GRK:'Gresik',JBR:'Jember'};
+// Kode UP3 di workbook progres fisik (urutan kolom TARGET_UP3).
+const FUP3 = ['SBS','SBU','SBB','SDA','GRK','MJK','PSR','MLG','KDR','MDN','PNG','BJG','JBR','BWI','STB','MDR'];
+const TAHAP = ['0. Rencana','1. Kontrak/KR Terbit','2. Material di Gudang','3. Material di Lokasi','4. Terpasang','5. Beroperasi','6. BAPP/BAST'];
+const TAHAP_WARNA = ['#c9d9de','#9fc3d6','#e0a21b','#f2c14e','#5cb8e6','#00a4a7','#16794a'];
+const MILESTONE = [['tgl_material','Material tiba'],['tgl_terpasang','Terpasang'],['tgl_komisioning','Komisioning'],['tgl_bast','BAST']];
+// Batas hari pengingat akhir kontrak.
+const INGAT = {kritis:14, segera:30, pantau:60};
+const STATUS = ['Rencana','Menunggu SKKI','Persiapan','ND User','ND Manajer','Pengadaan','Terkontrak','Pelaksanaan','Siap tagih','Terbayar','Batal'];
+const PRE = STATUS.slice(0,6);
+const JALUR = ['Kontrak Rinci (KHS)','Pengadaan Langsung','Penunjukan Langsung','SMART SOSSYS','Repeat Order','Tender Terbuka'];
+const BIDANG = ['FASOP','HAR','REN','K3L'];
+const KAT = ['Jasa','Material','Peralatan'];
+const ALASAN_AMD = ['Rekomposisi pekerjaan','Tambah lokasi','Kurang lokasi','Kendala material','Kondisi lapangan','Perpanjangan waktu','Lainnya'];
+// PRK, sub PRK, pagu, dan KHS dibaca dari workbook dan diubah langsung di sheet sumbernya.
+const WRITE = {'Admin Ren':['PAGU','RENCANA_KONTRAK','PAKET','KONTRAK','AMANDEMEN','BOQ','PROGRES','FISIK_UNIT','FISIK_PAKET','BAYAR','PLOT_AKI','KATALOG','RENCANA_MATERIAL','DISPOSISI','PROGNOSA'],'PIC User':['RENCANA_KONTRAK','PAKET','BOQ','DISPOSISI','KONTRAK','AMANDEMEN','PROGRES','PROGNOSA','FISIK_UNIT','FISIK_PAKET'],'Manajer':['DISPOSISI'],'Viewer':[]};
+const canWriteAny = sh => USER && (WRITE[USER.peran]||[]).includes(sh);
+// Tempel URL /exec dari deployment Apps Script di antara tanda kutip, lalu simpan file ini.
+const API_URL = 'https://script.google.com/macros/s/AKfycbyEVINono6Lk9rWI5nuce3Nz5wS5BnwZyEzz_zrED8tyM6MpgBpVAy0gcHhANE5JSOGzQ/exec';
+let CFG = {api:API_URL};
+try{ const c=JSON.parse(localStorage.getItem('aiao_cfg')||'{}'); if(!API_URL && c.api) CFG.api=c.api; }catch(e){}
+let SESI = ''; try{ SESI = localStorage.getItem('aiao_sesi')||''; }catch(e){}
+function setSesi(v){ SESI=v||''; try{ v?localStorage.setItem('aiao_sesi',v):localStorage.removeItem('aiao_sesi'); }catch(e){} }
+async function post(body){
+  const r = await fetch(CFG.api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+  return r.json();
+}
+let USER = null, D = null, C = null, chart = null, chart2 = null;
+
+/* ===== Utilitas ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = v => { const n = Number(v); return isFinite(n) ? n : 0; };
+const rp = v => Math.round(num(v)).toLocaleString('id-ID');
+const M = v => (num(v)/1e9).toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2})+' M';
+const pct = v => (num(v)*100).toLocaleString('id-ID',{maximumFractionDigits:1})+'%';
+const days = (a,b) => Math.round((Date.parse(b)-Date.parse(a))/864e5);
+const canWrite = sh => USER && (WRITE[USER.peran]||[]).includes(sh);
+function toast(text, kind){ const t=$('#toast'); t.innerHTML=`<div class="msg ${kind||'info'}" role="status">${esc(text)}</div>`; clearTimeout(t._h); t._h=setTimeout(()=>t.innerHTML='',4500); }
+function opt(list, val, blank){ return (blank?`<option value="">${esc(blank)}</option>`:'')+list.map(o=>{const v=typeof o==='object'?o.v:o, l=typeof o==='object'?o.l:o; return `<option value="${esc(v)}"${String(v)===String(val)?' selected':''}>${esc(l)}</option>`}).join(''); }
+
+/* ===== Data ===== */
+async function load(){
+  if(CFG.api){
+    if(!SESI){ showLogin(); return; }
+    try{
+      $('#mode').className='chip mute'; $('#mode').textContent='Memuat data…';
+      const r = await fetch(CFG.api+'?sesi='+encodeURIComponent(SESI));
+      const j = await r.json();
+      if(j.kode==='SESI'){ setSesi(''); showLogin('Sesi Anda berakhir. Silakan login lagi.'); return; }
+      if(!j.ok) throw new Error(j.error);
+      $('#app').classList.remove('solo'); $('#nav').hidden=false; $('#topbar').hidden=false; $('#btnPass').hidden=false; $('#btnLogout').hidden=false;
+      D = j.data; USER = j.user;
+      $('#mode').className='chip good'; $('#mode').textContent='Terhubung ke workbook';
+    }catch(e){
+      D = null; $('#mode').className='chip bad'; $('#mode').textContent='Gagal terhubung';
+      $('#view').innerHTML=`<div class="msg bad">Data tidak bisa dimuat: ${esc(e.message)}. Periksa koneksi internet atau URL API di Pengaturan.</div>`; return;
+    }
+  } else if(DEMO_DATA){
+    D = JSON.parse(JSON.stringify(DEMO_DATA)); USER = {nama:'Mode demo',peran:'Admin Ren',email:''}; $('#app').classList.remove('solo'); $('#nav').hidden=false; $('#topbar').hidden=false;
+    $('#mode').className='chip warn'; $('#mode').textContent='Mode demo: perubahan tidak tersimpan';
+  } else {
+    $('#mode').className='chip bad'; $('#mode').textContent='Belum terhubung';
+    $('#view').innerHTML='<div class="msg info">URL API Apps Script belum diisi. Isi di Pengaturan, atau tanam di baris API_URL pada index.html.</div>'; settings(); return;
+  }
+  D.FISIK = D.FISIK||{error:'Data progres fisik belum tersedia. Pasang Code.gs versi terbaru.'};
+  ['UNIT','PAKET','TARGET','PEKERJAAN','MASTER_KONTRAK'].forEach(k=>D.FISIK[k]=D.FISIK[k]||[]); D.FISIK.JENIS=D.FISIK.JENIS||{}; D.FISIK.BOBOT=D.FISIK.BOBOT||[.3,.4,.2,.1];
+  ['PRK','SUB_PRK','PAGU_VERSI','PLOT_AKI','KATALOG','RENCANA_MATERIAL','RENCANA_KONTRAK','KHS','PAKET','BOQ','DISPOSISI','KONTRAK','AMANDEMEN','PROGRES','BAYAR','PROGNOSA'].forEach(k=>D[k]=D[k]||[]);
+  $('#who').textContent = USER.nama+' · '+USER.peran; $('#btnIngat').hidden=false;
+  calc(); route();
+}
+const KEY = {RENCANA_KONTRAK:'id_rk',PRK:'id_prk',SUB_PRK:'id_sub',PAGU_VERSI:'id_versi',KATALOG:'id_item',RENCANA_MATERIAL:'id_rm',KHS:'id_khs',PAKET:'id_paket',BOQ:'id_boq',DISPOSISI:'id_disposisi',KONTRAK:'id_kontrak',AMANDEMEN:'id_amd',PROGRES:'id_progres',BAYAR:'id_bayar'};
+const PFX = {RENCANA_KONTRAK:'RK',PRK:'PRK',SUB_PRK:'SUB',PAGU_VERSI:'PV',KATALOG:'ITM',RENCANA_MATERIAL:'RM',KHS:'KHS',PAKET:'PKT',BOQ:'BOQ',DISPOSISI:'DSP',KONTRAK:'KTR',AMANDEMEN:'AMD',PROGRES:'PRG',BAYAR:'BYR'};
+function localId(sh){ let m=0; D[sh].forEach(r=>{const x=String(r[KEY[sh]]||'').match(/(\d+)$/); if(x) m=Math.max(m,+x[1]);}); return PFX[sh]+'-'+String(m+1).padStart(3,'0'); }
+async function save(sh, rec){
+  if(!canWrite(sh)){ toast('Peran Anda tidak boleh mengubah data ini.','bad'); return null; }
+  let out = rec;
+  if(CFG.api){
+    try{
+      const j = await post({sesi:SESI,action:'upsert',sheet:sh,record:rec});
+      if(j.kode==='SESI'){ close_(); setSesi(''); showLogin('Sesi Anda berakhir. Silakan login lagi; perubahan terakhir belum tersimpan.'); return null; }
+      if(!j.ok){ toast(j.error,'bad'); return null; } out = j.record;
+    }catch(e){ toast('Gagal menyimpan: '+e.message,'bad'); return null; }
+  } else if(KEY[sh] && !rec[KEY[sh]]) out = Object.assign({},rec,{[KEY[sh]]:localId(sh)});
+  const k = KEY[sh];
+  const i = k ? D[sh].findIndex(r=>r[k]===out[k]) : sh==='PLOT_AKI' ? D[sh].findIndex(r=>r.id_prk===out.id_prk&&num(r.bulan)===num(out.bulan)) : -1;
+  if(i>=0) D[sh][i]=Object.assign({},D[sh][i],out); else D[sh].push(out);
+  calc(); toast(CFG.api?'Tersimpan':'Tersimpan di mode demo (tidak masuk spreadsheet)','good');
+  return out;
+}
+
+/* ===== Perhitungan ===== */
+function calc(){
+  const amd = {}; D.AMANDEMEN.forEach(a=>{ if(a.status==='Rencana') return; (amd[a.id_ref]=amd[a.id_ref]||[]).push(a); });
+  const delta = id => (amd[id]||[]).reduce((s,a)=>s+num(a.nilai_sesudah)-num(a.nilai_sebelum),0);
+  const paket = Object.fromEntries(D.PAKET.map(p=>[p.id_paket,p]));
+  const F = D.FISIK, nk = x=>String(x||'').trim().toUpperCase();
+  const mk = Object.fromEntries(F.MASTER_KONTRAK.map(m=>[nk(m.no_kontrak),m]));
+  const fUnit = F.UNIT.map(u=>{ const t=tahapUnit(u); return {...u, tahap:t, lewat: !!(u.target_operasi && !u.tgl_operasi && u.target_operasi<TODAY)}; });
+  const fPaket = F.PAKET.map(p=>{ const done=MILESTONE.map(([k])=>!!p[k]); const pc=done.reduce((t,d,i)=>t+(d?num(F.BOBOT[i]):0),0);
+    const last=MILESTONE.map(m=>m[1]).filter((_,i)=>done[i]).pop()||'Kontrak'; return {...p, done, pct:pc, tahapNama:last}; });
+  const unitK={}, paketK={};
+  fUnit.forEach(u=>{ if(u.no_kontrak) (unitK[nk(u.no_kontrak)]=unitK[nk(u.no_kontrak)]||[]).push(u); });
+  fPaket.forEach(p=>{ paketK[nk(p.no_kontrak)]=p; });
+  const kontrak = D.KONTRAK.map(k=>{
+    const m = mk[nk(k.no_kontrak)]||{}; const akhir = k.akhir||m.akhir||'';
+    const lastAmd = (amd[k.id_kontrak]||[]).filter(a=>a.akhir_sesudah).slice(-1)[0];
+    const akhirBerlaku = lastAmd ? lastAmd.akhir_sesudah : akhir;
+    const bast = k.tgl_bast||m.tgl_bast||(paketK[nk(k.no_kontrak)]||{}).tgl_bast||'';
+    const us = unitK[nk(k.no_kontrak)]||[], fp = paketK[nk(k.no_kontrak)];
+    let fis=null;
+    if(fp) fis={pct:fp.pct, ket:fp.tahapNama, sumber:'paket'};
+    else if(us.length) fis={pct:us.filter(u=>u.tahap>=5).length/us.length, ket:`${us.filter(u=>u.tahap>=5).length}/${us.length} unit beroperasi`, sumber:'unit', terpasang:us.filter(u=>u.tahap>=4).length/us.length};
+    const sisaHari = akhirBerlaku ? days(TODAY,akhirBerlaku) : null;
+    const lv = bast||sisaHari===null ? '' : sisaHari<0 ? 'lewat' : sisaHari<=INGAT.kritis ? 'kritis' : sisaHari<=INGAT.segera ? 'segera' : sisaHari<=INGAT.pantau ? 'pantau' : '';
+    return {...k, akhir, awal:k.awal||m.awal||'', akhirBerlaku, diperpanjang:!!lastAmd&&lastAmd.akhir_sesudah!==akhir, bast, sisaHari, lv, fis,
+      amd:delta(k.id_kontrak), berlaku:num(k.nilai_awal)+delta(k.id_kontrak), paket:paket[k.id_paket]||{}};
+  });
+  const kById = Object.fromEntries(kontrak.map(k=>[k.id_kontrak,k]));
+  const bayarK = {}; D.BAYAR.forEach(b=>bayarK[b.id_kontrak]=(bayarK[b.id_kontrak]||0)+num(b.nilai));
+  kontrak.forEach(k=>{ k.bayar=bayarK[k.id_kontrak]||0; k.fisik=fisik(k); });
+  const sub = D.SUB_PRK.map(s=>{
+    const ks = kontrak.filter(k=>k.id_sub===s.id_sub || (!k.id_sub && k.paket.id_sub===s.id_sub));
+    const proses = D.PAKET.filter(p=>p.id_sub===s.id_sub && PRE.includes(p.status)).reduce((t,p)=>t+num(p.rab),0);
+    const kon = ks.reduce((t,k)=>t+k.berlaku,0), byr = ks.reduce((t,k)=>t+k.bayar,0);
+    const rk = (D.RENCANA_KONTRAK||[]).filter(r=>r.id_sub===s.id_sub && r.status==='Rencana').reduce((t,r)=>t+num(r.nilai_rencana),0);
+    const us = fUnit.filter(u=>u.id_sub===s.id_sub), ps = fPaket.filter(p=>p.id_sub===s.id_sub);
+    const proyeksi = kon+proses+rk;
+    return {...s, ai:num(s.ai_rencana), kontrak:kon, proses, rk, proyeksi, proyPct:num(s.ai_rencana)?proyeksi/num(s.ai_rencana):0, sisa:num(s.ai_rencana)-kon-proses, sisaRk:num(s.ai_rencana)-kon-proses-rk, bayar:byr, serapan:num(s.ai_rencana)?kon/num(s.ai_rencana):0,
+      fUnit:us.length, fOps:us.filter(u=>u.tahap>=5).length, fPasang:us.filter(u=>u.tahap>=4).length, fPaket:ps.length, fPaketPct:ps.length?ps.reduce((t,p)=>t+p.pct,0)/ps.length:null};
+  });
+  const prk = D.PRK.map(p=>{
+    const ss = sub.filter(s=>s.id_prk===p.id_prk);
+    const sum = f => ss.reduce((t,s)=>t+s[f],0);
+    const aki = D.PLOT_AKI.filter(a=>a.id_prk===p.id_prk).reduce((t,a)=>t+num(a.nilai),0) || num(p.aki);
+    return {...p, subs:ss, ai:num(p.ai_terbit), rencana:sum('ai'), kontrak:sum('kontrak'), proses:sum('proses'), rk:sum('rk'), proyeksi:sum('proyeksi'), sisa:num(p.ai_terbit)-sum('kontrak')-sum('proses'), sisaRk:num(p.ai_terbit)-sum('kontrak')-sum('proses')-sum('rk'), bayar:sum('bayar'), akiTotal:aki};
+  });
+  const khs = D.KHS.map(h=>{
+    const d = delta(h.id_khs), last=(amd[h.id_khs]||[]).slice(-1)[0];
+    const akhir = last && last.akhir_sesudah ? last.akhir_sesudah : h.akhir;
+    const terpakai = kontrak.filter(k=>k.id_khs===h.id_khs).reduce((t,k)=>t+k.berlaku,0);
+    const berlaku = num(h.nilai_awal)+d;
+    return {...h, amd:d, berlaku, akhirBerlaku:akhir, terpakai, sisa:berlaku-terpakai, hidup: akhir ? akhir>=TODAY : true, sisaHari: akhir?days(TODAY,akhir):null};
+  });
+  C = {kontrak, kById, sub, prk, khs, amd, paket, fUnit, fPaket};
+  const ORD={lewat:0,kritis:1,segera:2,pantau:3};
+  C.ingat = kontrak.filter(k=>k.lv).sort((a,b)=>ORD[a.lv]-ORD[b.lv]||a.sisaHari-b.sisaHari);
+  C.tot = ['ai','kontrak','proses','rk','proyeksi','sisa','sisaRk','bayar','akiTotal'].reduce((o,f)=>(o[f]=prk.reduce((t,p)=>t+num(p[f]),0),o),{});
+  C.flags = flags();
+  const nI=C.ingat.filter(k=>k.lv!=='pantau').length; const b=$('#ingatN'); if(b){ b.textContent=nI; b.hidden=!nI; }
+}
+function tahapUnit(u){
+  return u.tgl_bast?6:u.tgl_operasi?5:u.tgl_terpasang?4:u.tgl_keluar?3:u.tgl_gr?2:(u.no_kr||u.no_kontrak)?1:0;
+}
+function fisik(k){
+  const boq = D.BOQ.filter(b=>b.id_paket===k.id_paket);
+  if(!boq.length) return null;
+  let tgt=0, done=0;
+  boq.forEach(b=>{
+    const h = num(b.harga)||num((D.KATALOG.find(i=>i.id_item===b.id_item)||{}).harga_satuan);
+    const v = Math.max(0,...D.PROGRES.filter(p=>p.id_kontrak===k.id_kontrak&&p.id_item===b.id_item&&p.up3===b.up3).map(p=>num(p.vol_terpasang)));
+    tgt += num(b.volume)*h; done += Math.min(v,num(b.volume))*h;
+  });
+  return tgt ? done/tgt : 0;
+}
+function flags(){
+  const f=[];
+  C.sub.filter(s=>s.sisa<0).forEach(s=>f.push({lv:'bad',t:'Perlu rekomposisi',d:`${s.uraian}: melebihi AI Rencana sebesar Rp ${rp(-s.sisa)}`,go:'#pagu'}));
+  C.khs.filter(h=>h.hidup && h.sisa>1 && h.sisaHari!==null && h.sisaHari<=60).forEach(h=>f.push({lv:'warn',t:'KHS segera berakhir',d:`${h.uraian} (${h.pemenang}): sisa kuota Rp ${rp(h.sisa)}, berakhir ${h.akhirBerlaku}`,go:'#khs'}));
+  D.PAKET.filter(p=>p.tgl_pr && p.tgl_nd_man && p.tgl_pr<p.tgl_nd_man).forEach(p=>f.push({lv:'warn',t:'Urutan tanggal',d:`${p.id_paket} ${(p.nama_paket||'').slice(0,60)}: PR (${p.tgl_pr}) sebelum ND Manajer (${p.tgl_nd_man})`,go:'#paket'}));
+  C.kontrak.filter(k=>k.lv==='kritis'||k.lv==='segera').forEach(k=>f.push({lv:k.lv==='kritis'?'bad':'warn',t:`Kontrak berakhir ${k.sisaHari} hari lagi`,d:`${k.no_kontrak||k.id_kontrak} (${k.vendor}) · akhir ${k.akhirBerlaku}${k.fis?' · fisik '+pct(k.fis.pct):''}: siapkan BAST atau amandemen waktu`,go:'#kontrak'}));
+  const lw=C.kontrak.filter(k=>k.lv==='lewat'); if(lw.length) f.push({lv:'bad',t:`${lw.length} kontrak lewat masa, BAST belum ada`,d:'Perlu amandemen perpanjangan atau input BAST. Buka Kontrak > filter Lewat masa.',go:'#kontrak'});
+  const bad=C.fUnit.filter(u=>u.validasi&&u.validasi!=='OK'&&u.tahap>=4).length; if(bad) f.push({lv:'warn',t:'Data progres fisik perlu dicek',d:`${bad} unit terpasang/beroperasi dengan catatan validasi (mis. tanpa evidence atau target operasi kosong)`,go:'#fisik'});
+  D.PAKET.filter(p=>PRE.includes(p.status)).forEach(p=>{ const a=p.tgl_nd_user?days(p.tgl_nd_user,TODAY):null; if(a!==null&&a>30) f.push({lv:'warn',t:'Proses lama',d:`${p.id_paket} ${(p.nama_paket||'').slice(0,60)}: ${a} hari sejak ND User, status ${p.status}`,go:'#paket'}); });
+  return f;
+}
+
+/* ===== Routing ===== */
+const VIEWS = {dashboard:vDash, pagu:vPagu, rencana:vRencana, paket:vPaket, kontrak:vKontrak, khs:vKhs, material:vMaterial, fisik:vFisik, progres:vProgres, bayar:vBayar};
+function route(){
+  if(!D) return;
+  const h = (location.hash||'#dashboard').slice(1); const v = VIEWS[h]?h:'dashboard';
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));
+  const T={dashboard:'Dashboard serapan',pagu:'Pagu PRK',rencana:'Rencana kontrak',paket:'Paket pekerjaan',kontrak:'Kontrak dan amandemen',khs:'KHS',material:'Rencana material',fisik:'Progres fisik',progres:'Volume BoQ terpasang',bayar:'Pembayaran'};
+  $('#ptitle').textContent=T[v]; window.scrollTo(0,0);
+  if(chart){ chart.destroy(); chart=null; } if(chart2){ chart2.destroy(); chart2=null; }
+  VIEWS[v]();
+}
+window.addEventListener('hashchange',route);
+
+/* ===== Modal dan form ===== */
+function modal(html){ $('#modal').innerHTML=html; $('#ov').classList.add('on'); const f=$('#modal').querySelector('input,select,textarea,button'); if(f) f.focus(); }
+function close_(){ $('#ov').classList.remove('on'); }
+$('#ov').addEventListener('click',e=>{ if(e.target.id==='ov') close_(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') close_(); });
+function form(title, fields, rec, onSave, note, after){
+  rec = rec||{};
+  const inp = f => {
+    const v = rec[f.k]!==undefined?rec[f.k]:(f.def!==undefined?f.def:'');
+    const id='f_'+f.k;
+    let el;
+    if(f.type==='select') el=`<select id="${id}"${f.ro?' disabled':''}>${opt(f.options,v,f.blank)}</select>`;
+    else if(f.type==='textarea') el=`<textarea id="${id}" rows="2">${esc(v)}</textarea>`;
+    else el=`<input id="${id}" type="${f.type||'text'}" value="${esc(v)}"${f.type==='number'?' step="any" min="0"':''}${f.ro?' readonly':''}>`;
+    return `<label class="${f.wide?'wide':''}" for="${id}">${esc(f.label)}${f.req?' *':''}${el}</label>`;
+  };
+  modal(`<div class="head"><h2>${esc(title)}</h2><button type="button" onclick="close_()" aria-label="Tutup">Tutup</button></div>
+    ${note?`<div class="msg info">${note}</div>`:''}
+    <form id="frm" class="form" novalidate>${fields.map(inp).join('')}<div class="wide" id="ferr"></div>
+    <div class="wide row"><button class="primary" type="submit">Simpan</button><button type="button" onclick="close_()">Batal</button></div></form>`);
+  $('#frm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const out = {...rec};
+    for(const f of fields){ let v=$('#f_'+f.k).value.trim(); if(f.type==='number') v = v===''?'':Number(v); out[f.k]=v; }
+    const miss = fields.filter(f=>f.req && (out[f.k]===''||out[f.k]===undefined)).map(f=>f.label);
+    if(miss.length){ $('#ferr').innerHTML=`<div class="msg bad">Lengkapi: ${esc(miss.join(', '))}.</div>`; return; }
+    const warn = onSave.check ? onSave.check(out) : null;
+    if(warn && /Perbaiki dulu/.test(warn)){ $('#ferr').innerHTML=`<div class="msg bad">${warn}</div>`; return; }
+    if(warn && !rec._ok){ $('#ferr').innerHTML=`<div class="msg warn">${warn}</div>`; rec._ok=true; return; }
+    delete out._ok; const r = await onSave(out); if(r!==false) close_();
+  });
+  $('#frm').addEventListener('input',()=>{ $('#ferr').innerHTML=''; rec._ok=false; });
+  if(after) after();
+}
+
+/* ===== Tampilan: Dashboard ===== */
+const tc=s=>String(s||'').toLowerCase().replace(/\b(\w)/g,m=>m.toUpperCase()).replace(/\b(Uid|Jtm|Gi|Tm|Scadatel|Ai|Ao)\b/g,m=>m.toUpperCase());
+const ICO={"ai": "<path d=\"M3 7h18v12H3zM3 7l3-3h12l3 3\"/>", "k": "<path d=\"M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5\"/>", "p": "<path d=\"M12 6v6l4 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z\"/>", "r": "<path d=\"M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 12h6M9 16h4\"/>", "s": "<path d=\"M4 12h16M12 4v16\"/>", "b": "<path d=\"M3 6h18v12H3zM3 10h18\"/>"};
+function tile(l,v,n,ic,tc,tcs,bar){ return `<div class="tile" style="--tc:${tc};--tcs:${tcs}"><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ICO[ic]}</svg></div><div class="l">${l}</div><div class="v">${v}</div><div class="n">${n}</div>${bar!==undefined?`<div class="bar"><i style="width:${Math.max(0,Math.min(100,bar*100))}%"></i></div>`:''}</div>`; }
+function gauge(v,label){
+  const r=70,c=2*Math.PI*r,p=Math.max(0,Math.min(1,v));
+  return `<div class="gauge"><svg width="190" height="190" viewBox="0 0 190 190" role="img" aria-label="${esc(label)} ${pct(v)}">
+   <circle cx="95" cy="95" r="${r}" fill="none" stroke="var(--bg)" stroke-width="16"/>
+   <circle cx="95" cy="95" r="${r}" fill="none" stroke="${v>1?'var(--bad)':'var(--teal)'}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 95 95)"/>
+   <text x="95" y="98" text-anchor="middle" style="font:700 30px var(--display);fill:var(--ink)">${pct(v)}</text></svg><div class="muted" style="font-size:12px">${esc(label)}</div></div>`;
+}
+function vDash(){
+  const t=C.tot, cnt=s=>D.PAKET.filter(p=>p.status===s).length, ai=t.ai||1;
+  const tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const fun=[['AI Terbit',t.ai,'var(--bar3)'],['Komitmen (kontrak + proses)',t.kontrak+t.proses,'var(--bar2)'],['Terkontrak',t.kontrak,'var(--bar1)'],['Terbayar',t.bayar,'var(--good)']];
+  $('#view').innerHTML=`
+  <div class="pagehead"><div><h2>Serapan kontrak ${pct(t.kontrak/ai)} dari AI Terbit</h2><p>${tgl} · data langsung dari workbook MONITORING SKKI UP2D 2026</p></div></div>
+  <div class="tiles">
+    ${tile('AI Terbit (SKKI)',M(t.ai),`${C.prk.length} PRK · ${C.sub.length} sub PRK`,'ai','var(--navy)','var(--accent-soft)')}
+    ${tile('Terkontrak',M(t.kontrak),`${C.kontrak.length} kontrak · ${pct(t.kontrak/ai)}`,'k','var(--teal)','var(--teal-soft)',t.kontrak/ai)}
+    ${tile('Dalam proses',M(t.proses),`${D.PAKET.filter(p=>PRE.includes(p.status)).length} paket belum terkontrak`,'p','#d98e04','var(--warn-soft)',t.proses/ai)}
+    ${tile('Rencana kontrak',M(t.rk),`${(D.RENCANA_KONTRAK||[]).filter(r=>r.status==='Rencana').length} rencana belum jadi paket`,'r','#6b5bd3','#ecebfb',t.rk/ai)}
+    ${tile('Sisa bebas',M(t.sisaRk),'setelah kontrak, proses, dan rencana',t.sisaRk<0?'s':'s',t.sisaRk<0?'var(--bad)':'var(--good)',t.sisaRk<0?'var(--bad-soft)':'var(--good-soft)')}
+    ${tile('Terbayar',M(t.bayar),t.akiTotal?pct(t.bayar/t.akiTotal)+' dari AKI':'Plot AKI belum diisi','b','var(--good)','var(--good-soft)',t.akiTotal?t.bayar/t.akiTotal:0)}
+  </div>
+  <div class="grid3">
+    <div class="panel"><h3>Serapan kontrak</h3>${gauge(t.kontrak/ai,'terkontrak / AI Terbit')}
+      <div class="funnel" style="margin-top:10px">${fun.map(([l,v,c])=>`<div class="f"><span>${l}</span><div class="b"><i style="width:${Math.min(100,v/ai*100)}%;background:${c}"></i></div><span class="n" style="text-align:right;font-weight:600">${M(v)}</span></div>`).join('')}</div></div>
+    <div class="panel"><h3>Komposisi pagu per PRK (Rp miliar)</h3><div class="chartbox"><canvas id="ch"></canvas></div></div>
+  </div>
+  <div class="panel scroll"><h3>Ringkasan per PRK</h3>
+    <table><thead><tr><th>PRK</th><th>Status</th><th class="n">AI Terbit</th><th class="n">Terkontrak</th><th class="n">Dalam proses</th><th class="n">Rencana kontrak</th><th style="width:170px">Serapan kontrak</th><th class="n">Sisa bebas</th></tr></thead><tbody>
+    ${C.prk.map(p=>`<tr class="click" onclick="location.hash='#pagu'"><td><div style="font-weight:600">${esc(tc(p.uraian))}</div><div class="muted" style="font-size:12px">${esc(p.no_prk)}</div></td><td><span class="chip ${p.status_skki==='SKKI Terbit'?'good':'warn'}">${esc(p.status_skki||'-')}</span></td>
+      <td class="n">${M(p.ai)}</td><td class="n">${M(p.kontrak)}</td><td class="n">${M(p.proses)}</td><td class="n">${M(p.rk)}</td><td>${meter(p.ai?p.kontrak/p.ai:0)}</td><td class="n" style="font-weight:600;color:${p.sisaRk<0?'var(--bad)':'var(--good)'}">${M(p.sisaRk)}</td></tr>`).join('')}
+    <tr class="tot"><td>Total</td><td></td><td class="n">${M(t.ai)}</td><td class="n">${M(t.kontrak)}</td><td class="n">${M(t.proses)}</td><td class="n">${M(t.rk)}</td><td>${meter(t.kontrak/ai)}</td><td class="n">${M(t.sisaRk)}</td></tr></tbody></table></div>
+  ${ingatPanel(6)}
+  <div class="grid2">
+    <div class="panel"><h3>Perlu perhatian <span class="chip ${C.flags.length?'warn':'good'}">${C.flags.length}</span></h3>
+      <div style="max-height:360px;overflow:auto;display:flex;flex-direction:column;gap:6px">${C.flags.length?C.flags.map(f=>`<a href="${f.go}" class="msg ${f.lv}" style="text-decoration:none;display:block"><b>${esc(f.t)}</b> · ${esc(f.d)}</a>`).join(''):'<div class="msg good">Tidak ada catatan.</div>'}</div></div>
+    <div class="panel"><h3>Paket per status</h3><div class="funnel">${STATUS.filter(s=>s!=='Batal'||cnt(s)).map(s=>`<div class="f"><span>${s}</span><div class="b"><i style="width:${D.PAKET.length?cnt(s)/D.PAKET.length*100:0}%;background:${PRE.includes(s)?'#e0a21b':'var(--teal)'}"></i></div><span style="text-align:right;font-weight:600">${cnt(s)} paket</span></div>`).join('')}</div></div>
+  </div>`;
+  if(!window.Chart){ $('#ch').parentNode.innerHTML='<div class="muted">Grafik tidak bisa dimuat (pustaka grafik tidak tersedia).</div>'; return; }
+  const css=getComputedStyle(document.documentElement), col=v=>css.getPropertyValue(v).trim();
+  const ps=C.prk.filter(p=>p.ai>0);
+  chart=new Chart($('#ch'),{type:'bar',data:{labels:ps.map(p=>tc(p.uraian.replace(/ UID.*| TAHUN.*/i,''))),
+    datasets:[{label:'Terkontrak',data:ps.map(p=>p.kontrak/1e9),backgroundColor:col('--bar1'),borderRadius:4},{label:'Dalam proses',data:ps.map(p=>p.proses/1e9),backgroundColor:col('--bar2'),borderRadius:4},{label:'Rencana kontrak',data:ps.map(p=>p.rk/1e9),backgroundColor:'#9d92e6',borderRadius:4},{label:'Sisa bebas',data:ps.map(p=>Math.max(0,p.sisaRk)/1e9),backgroundColor:col('--bar3'),borderRadius:4}]},
+    options:{indexAxis:'y',maintainAspectRatio:false,animation:false,scales:{x:{stacked:true,grid:{color:col('--line')},ticks:{color:col('--muted')}},y:{stacked:true,grid:{display:false},ticks:{color:col('--ink'),font:{weight:'600'}}}},
+    plugins:{legend:{position:'bottom',labels:{color:col('--ink'),boxWidth:12,usePointStyle:true}},tooltip:{callbacks:{label:c=>c.dataset.label+': Rp '+c.parsed.x.toLocaleString('id-ID',{maximumFractionDigits:2})+' M'}}}}});
+}
+/* ===== Pengingat akhir kontrak ===== */
+const LV_NAMA={lewat:'Lewat masa',kritis:`≤ ${INGAT.kritis} hari`,segera:`≤ ${INGAT.segera} hari`,pantau:`≤ ${INGAT.pantau} hari`};
+function sisaChip(k){
+  if(k.bast) return '<span class="chip good">BAST '+esc(k.bast)+'</span>';
+  if(k.sisaHari===null) return '<span class="chip mute">Akhir belum ada</span>';
+  const c=k.lv==='lewat'?'lewat':k.lv==='kritis'?'bad':k.lv==='segera'?'warn':k.lv==='pantau'?'teal':'mute';
+  return `<span class="chip ${c}">${k.sisaHari<0?'Lewat '+(-k.sisaHari)+' hari':k.sisaHari+' hari lagi'}</span>`;
+}
+function remindRow(k){
+  const risiko = k.fis && k.lv!=='lewat' && k.fis.pct<0.8;
+  return `<div class="remind lv-${k.lv}"><div class="d">${k.sisaHari<0?'+'+(-k.sisaHari):k.sisaHari}<small>${k.sisaHari<0?'hari lewat':'hari lagi'}</small></div>
+   <div style="min-width:0"><div style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(tc(k.paket.nama_paket||k.no_kontrak))}</div>
+    <div class="muted" style="font-size:12px">${esc(k.no_kontrak)} · ${esc(k.vendor)} · akhir ${esc(k.akhirBerlaku)}${k.diperpanjang?' (setelah amandemen)':''}</div>
+    <div class="row" style="margin-top:4px;font-size:12px">${k.fis?`<span>Fisik ${pct(k.fis.pct)} · ${esc(k.fis.ket)}</span>`:'<span class="muted">Progres fisik belum tercatat</span>'}${risiko?'<span class="chip bad">Fisik tertinggal: pertimbangkan amandemen waktu</span>':''}${k.lv==='lewat'?'<span class="chip bad">Amandemen perpanjangan atau input BAST</span>':''}</div></div>
+   <div class="row" style="flex-wrap:nowrap">${canWrite('AMANDEMEN')?`<button type="button" onclick="editAmd('Kontrak','${esc(k.id_kontrak)}')">Amandemen</button>`:''}${canWrite('KONTRAK')?`<button type="button" class="ghost" onclick="editKontrak('${esc(k.id_kontrak)}')">Input BAST</button>`:''}</div></div>`;
+}
+function ingatPanel(n){
+  const L=C.ingat; const cnt=lv=>L.filter(k=>k.lv===lv).length;
+  return `<div class="panel"><div class="row" style="margin-bottom:10px"><h3 style="margin:0">Pengingat akhir kontrak</h3><div class="grow"></div>
+   ${['lewat','kritis','segera','pantau'].map(lv=>`<span class="chip ${lv==='lewat'?'lewat':lv==='kritis'?'bad':lv==='segera'?'warn':'teal'}">${LV_NAMA[lv]}: ${cnt(lv)}</span>`).join('')}
+   <a href="#kontrak" onclick="KF='ingat'" style="font-size:12.5px;font-weight:600;color:var(--accent)">Semua →</a></div>
+   ${L.length?`<div style="display:flex;flex-direction:column;gap:8px">${L.filter(k=>k.lv!=='pantau').slice(0,n).map(remindRow).join('')||'<div class="msg good">Tidak ada kontrak yang berakhir dalam '+INGAT.segera+' hari.</div>'}</div>`:'<div class="msg good">Semua kontrak masih jauh dari tanggal akhir atau sudah BAST.</div>'}
+   <div class="muted" style="font-size:12px;margin-top:8px">Tanggal akhir dari Mon Pengadaan / MASTER_KONTRAK, digeser oleh amandemen waktu yang berstatus Terbit. Pengingat berhenti setelah tanggal BAST diisi.</div></div>`;
+}
+function meter(v){ return `<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="meter" style="flex:1"><i class="${v>1?'over':''}" style="width:${Math.min(100,v*100)}%"></i></div><span style="font-size:12px;font-weight:600;min-width:46px;text-align:right;color:${v>1?'var(--bad)':'inherit'}">${pct(v)}</span></div>`; }
+
+/* ===== Tampilan: Pagu ===== */
+let PP='';
+function stackBar(s,big){
+  const tot=s.kontrak+s.proses+s.rk, base=Math.max(num(s.ai),tot)||1, w=v=>Math.max(0,v/base*100), over=tot>num(s.ai);
+  return `<div class="stack${big?' big':''}${over?' over':''}" title="Terkontrak ${M(s.kontrak)} · Proses ${M(s.proses)} · Rencana ${M(s.rk)} · Pagu ${M(s.ai)}"><i style="width:${w(s.kontrak)}%;background:var(--bar1)"></i><i style="width:${w(s.proses)}%;background:var(--bar2)"></i><i style="width:${w(s.rk)}%;background:#9d92e6"></i>${over?`<b style="left:${w(num(s.ai))}%"></b>`:''}</div>`;
+}
+function vPagu(){
+  const ed=canWrite('PAGU'), t=C.tot, ai=t.ai||1;
+  $('#view').innerHTML=`<div class="pagehead"><div><h2>Pagu PRK dan proyeksi terkontrak</h2><p>Nilai pagu dari sheet REKAP RINCIAN. Proyeksi terkontrak = sudah terkontrak + paket dalam proses + rencana kontrak yang belum jadi paket.${ed?' Klik Ubah untuk mengedit pagu; rumus lama disimpan di Riwayat.':''}</p></div></div>
+  <div class="tiles">${tile('AI Terbit',M(t.ai),'total SKKI','ai','var(--navy)','var(--accent-soft)')}${tile('Terkontrak',M(t.kontrak),pct(t.kontrak/ai)+' dari AI Terbit','k','var(--teal)','var(--teal-soft)',t.kontrak/ai)}
+   ${tile('Proyeksi terkontrak',M(t.proyeksi),pct(t.proyeksi/ai)+' bila proses dan rencana terkontrak','r','#6b5bd3','#ecebfb',t.proyeksi/ai)}
+   ${tile('Sisa setelah proyeksi',M(t.sisaRk),C.sub.filter(s=>s.sisaRk<0).length+' sub PRK perlu rekomposisi','s',t.sisaRk<0?'var(--bad)':'var(--good)',t.sisaRk<0?'var(--bad-soft)':'var(--good-soft)')}</div>
+  <div class="panel"><div class="row" style="margin-bottom:8px"><h3 style="margin:0">Kurva terkontrak kumulatif 2026: realisasi dan proyeksi</h3><div class="grow"></div>
+    <label for="pp" style="min-width:280px"><select id="pp" aria-label="Pilih PRK">${opt(C.prk.map(p=>({v:p.id_prk,l:p.no_prk+' · '+tc(p.uraian).slice(0,40)})),PP,'Semua PRK')}</select></label></div>
+    <div class="chartbox" style="height:300px"><canvas id="chp"></canvas></div>
+    <div class="muted" style="font-size:12px;margin-top:6px">Realisasi per bulan awal kontrak. Proyeksi: paket dalam proses pada bulan target terbit kontrak, rencana kontrak pada bulan target kontrak. Yang belum punya target tanggal dihitung di bulan depan.</div></div>
+  <div class="legend"><span><i style="background:var(--bar1)"></i>Terkontrak</span><span><i style="background:var(--bar2)"></i>Dalam proses</span><span><i style="background:#9d92e6"></i>Rencana kontrak</span><span><i style="background:var(--bad);width:3px"></i>Garis merah = batas pagu (proyeksi melebihi pagu)</span></div>
+  ${C.prk.map(p=>`<div class="panel scroll"><div class="prkhead"><span class="code">${esc(p.no_prk)}</span><b>${esc(tc(p.uraian))}</b><span class="chip ${p.status_skki==='SKKI Terbit'?'good':'warn'}">${esc(p.status_skki||'-')}</span><div class="grow"></div>
+    <span class="muted">AI Terbit <b style="color:var(--ink)">Rp ${rp(p.ai)}</b> · proyeksi <b style="color:${p.proyeksi>p.ai?'var(--bad)':'var(--ink)'}">${pct(p.ai?p.proyeksi/p.ai:0)}</b></span>${ed?`<button type="button" onclick="editPagu('PRK','${esc(p.id_prk)}')">Ubah AI Terbit</button>`:''}<button type="button" class="ghost" onclick="riwayat('${esc(p.id_prk)}')">Riwayat</button></div>
+    <table><thead><tr><th>Sub PRK</th><th class="n">AI Rencana</th><th class="n">Terkontrak</th><th class="n">Dalam proses</th><th class="n">Rencana kontrak</th><th class="n">Proyeksi terkontrak</th><th style="width:170px">Proyeksi / AI Rencana</th><th class="n">Sisa</th><th></th></tr></thead><tbody>
+    ${p.subs.map(s=>`<tr><td><div style="font-weight:600">${esc(s.uraian)}</div>${s.sisaRk<0?'<span class="chip bad">Perlu rekomposisi</span> ':''}${s.catatan?`<span class="muted" style="font-size:12px">${esc(s.catatan)}</span>`:''}</td><td class="n">${rp(s.ai)}</td><td class="n">${rp(s.kontrak)}</td><td class="n">${rp(s.proses)}</td><td class="n">${rp(s.rk)}</td>
+      <td class="n" style="font-weight:600">${rp(s.proyeksi)}</td><td>${stackBar(s)}<div style="font-size:12px;font-weight:600;margin-top:3px;color:${s.proyPct>1?'var(--bad)':'inherit'}">${pct(s.proyPct)}</div></td>
+      <td class="n" style="font-weight:600;color:${s.sisaRk<0?'var(--bad)':'var(--good)'}">${rp(s.sisaRk)}</td>
+      <td><div style="display:flex;flex-direction:column;gap:4px;align-items:stretch">${ed?`<button type="button" class="mini" onclick="editPagu('SUB','${esc(s.id_sub)}')">Ubah</button>`:''}<button type="button" class="ghost mini" onclick="riwayat('${esc(s.id_sub)}')">Riwayat</button></div></td></tr>`).join('')}
+    <tr class="tot"><td>Total ${esc(p.no_prk)}</td><td class="n">${rp(p.rencana)}</td><td class="n">${rp(p.kontrak)}</td><td class="n">${rp(p.proses)}</td><td class="n">${rp(p.rk)}</td><td class="n">${rp(p.proyeksi)}</td><td>${stackBar({ai:p.ai,kontrak:p.kontrak,proses:p.proses,rk:p.rk})}</td><td class="n">${rp(p.sisaRk)}</td><td></td></tr>
+    </tbody></table></div>`).join('')}`;
+  $('#pp').addEventListener('change',e=>{PP=e.target.value;vPagu();});
+  kurvaProyeksi();
+}
+function kurvaProyeksi(){
+  if(!window.Chart){ $('#chp').parentNode.innerHTML='<div class="muted">Grafik tidak bisa dimuat (pustaka grafik tidak tersedia).</div>'; return; }
+  const inP=id=>!PP||String(id).split('|')[0]===PP||String(id)===PP;
+  const nm=new Date().getMonth()+1, bl=d=>{ const m=String(d||'').match(/^2026-(\d{2})/); if(m) return +m[1]; return String(d||'')<'2026'&&d?1:0; };
+  const nxt=Math.min(12,nm+1), real=Array(13).fill(0), proy=Array(13).fill(0);
+  C.kontrak.filter(k=>inP(k.id_sub||k.paket.id_sub)).forEach(k=>{ const m=bl(k.awal)||bl(k.tgl_po)||nm; real[Math.min(12,m)]+=k.berlaku; });
+  D.PAKET.filter(p=>PRE.includes(p.status)&&inP(p.id_sub)).forEach(p=>{ const m=Math.max(bl(p.target_terbit)||nxt,nm); proy[Math.min(12,m)]+=num(p.rab); });
+  (D.RENCANA_KONTRAK||[]).filter(r=>r.status==='Rencana'&&inP(r.id_sub)).forEach(r=>{ const m=Math.max(bl(r.target_kontrak)||nxt,nm); proy[Math.min(12,m)]+=num(r.nilai_rencana); });
+  const cum=(a,upto)=>{ let t=0; return a.slice(1).map((v,i)=>{ t+=v; return i+1<=upto?t/1e9:null; }); };
+  const realC=cum(real,nm), allC=(()=>{ let t=0; return real.slice(1).map((v,i)=>{ t+=v+proy[i+1]; return t/1e9; }); })();
+  const proyC=allC.map((v,i)=>i+1>=nm?v:null);
+  const aiP=PP?num((C.prk.find(p=>p.id_prk===PP)||{}).ai):C.tot.ai;
+  const css=getComputedStyle(document.documentElement), col=v=>css.getPropertyValue(v).trim();
+  const BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  chart=new Chart($('#chp'),{type:'line',data:{labels:BLN,datasets:[
+    {label:'Realisasi terkontrak',data:realC,borderColor:col('--bar1'),backgroundColor:'rgba(11,94,135,.12)',fill:true,tension:.25,pointRadius:3},
+    {label:'Proyeksi terkontrak',data:proyC,borderColor:'#6b5bd3',borderDash:[6,4],tension:.25,pointRadius:3},
+    {label:'AI Terbit',data:BLN.map(()=>aiP/1e9),borderColor:col('--bad'),borderWidth:1.5,borderDash:[2,3],pointRadius:0}]},
+    options:{maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},scales:{y:{beginAtZero:true,grid:{color:col('--line')},ticks:{color:col('--muted'),callback:v=>v+' M'}},x:{grid:{display:false},ticks:{color:col('--muted')}}},
+    plugins:{legend:{position:'bottom',labels:{color:col('--ink'),boxWidth:12,usePointStyle:true}},tooltip:{callbacks:{label:c=>c.parsed.y===null?'':c.dataset.label+': Rp '+c.parsed.y.toLocaleString('id-ID',{maximumFractionDigits:2})+' M'}}}}});
+}
+async function editPagu(objek,id){
+  const t=objek==='PRK'?D.PRK.find(x=>x.id_prk===id):D.SUB_PRK.find(x=>x.id_sub===id);
+  const lama=num(objek==='PRK'?t.ai_terbit:t.ai_rencana), label=objek==='PRK'?'AI Terbit':'AI Rencana';
+  form(`Ubah ${label}: ${t.uraian}`,[{k:'nilai_baru',label:`${label} baru (Rp)`,type:'number',req:1,def:lama},{k:'alasan',label:'Alasan perubahan',type:'select',options:['Revisi LKAI','Rekomposisi','SKKI terbit','Revisi SKKI','Koreksi data','Lainnya'],req:1},{k:'catatan',label:'Catatan',type:'textarea',wide:1}],{},
+  async o=>{
+    const rec={objek,id_ref:id,nilai_baru:o.nilai_baru,alasan:o.alasan+(o.catatan?': '+o.catatan:'')};
+    let pv={...rec,id_versi:'PV-demo',jenis_nilai:label,nilai_lama:lama,tanggal:TODAY,oleh:USER.nama};
+    if(CFG.api){ try{ const j=await post({sesi:SESI,action:'upsert',sheet:'PAGU',record:rec}); if(j.kode==='SESI'){close_();setSesi('');showLogin('Sesi berakhir.');return false;} if(!j.ok){toast(j.error,'bad');return false;} pv=j.record; }catch(e){toast('Gagal menyimpan: '+e.message,'bad');return false;} }
+    if(objek==='PRK') t.ai_terbit=num(o.nilai_baru); else t.ai_rencana=num(o.nilai_baru);
+    D.PAGU_VERSI.push(pv); calc(); route(); toast(CFG.api?'Pagu tersimpan ke REKAP RINCIAN':'Tersimpan di mode demo','good');
+  }, `Nilai sekarang Rp ${rp(lama)}. Nilai baru ditulis ke sheet REKAP RINCIAN dan menggantikan isi sel (termasuk rumusnya). Isi sel lama disimpan di Riwayat dan bisa dikembalikan.`);
+}
+function riwayat(id){
+  const v=D.PAGU_VERSI.filter(x=>x.id_ref===id).sort((a,b)=>String(b.id_versi).localeCompare(String(a.id_versi)));
+  modal(`<div class="head"><div><h2>Riwayat pagu</h2><div class="muted">${esc(id.split('|').pop())}</div></div><button type="button" onclick="close_()">Tutup</button></div>
+  <div class="scroll"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th class="n">Nilai lama</th><th class="n">Nilai baru</th><th>Alasan</th><th>Oleh</th><th></th></tr></thead><tbody>
+  ${v.map(x=>`<tr><td>${esc(x.tanggal)}</td><td>${esc(x.jenis_nilai)}</td><td class="n">${x.nilai_lama===''?'-':rp(x.nilai_lama)}</td><td class="n">${rp(x.nilai_baru)}</td><td>${esc(x.alasan)}${x.rumus_lama&&String(x.rumus_lama).startsWith('=')?`<div class="muted" style="font-size:11.5px">Isi sel lama: <code>${esc(x.rumus_lama)}</code></div>`:''}</td><td>${esc(x.oleh)}</td>
+   <td>${x.rumus_lama&&canWrite('PAGU')?`<button type="button" onclick="restorePagu('${esc(x.id_versi)}')">Kembalikan</button>`:''}</td></tr>`).join('')||'<tr><td colspan="7">Belum ada riwayat.</td></tr>'}</tbody></table></div>`);
+}
+async function restorePagu(idv){
+  if(!CFG.api){ toast('Kembalikan rumus hanya tersedia saat terhubung ke workbook.','warn'); return; }
+  try{ const j=await post({sesi:SESI,action:'restore',sheet:'PAGU',id:idv}); if(!j.ok){toast(j.error,'bad');return;} close_(); toast('Isi sel lama dikembalikan','good'); load(); }catch(e){ toast('Gagal: '+e.message,'bad'); }
+}
+
+/* ===== Tampilan: Rencana kontrak ===== */
+const RK_STATUS=['Rencana','Diproses','Terkontrak','Batal'];
+let RF={prk:'',status:'',bidang:'',q:''};
+function vRencana(){
+  const R=D.RENCANA_KONTRAK||[]; const subName=id=>(D.SUB_PRK.find(s=>s.id_sub===id)||{}).uraian||'';
+  const rows=R.filter(r=>(!RF.prk||String(r.id_sub).startsWith(RF.prk))&&(!RF.status||r.status===RF.status)&&(!RF.bidang||r.bidang===RF.bidang)&&(!RF.q||String(r.pekerjaan).toLowerCase().includes(RF.q.toLowerCase())));
+  const sum=st=>R.filter(r=>r.status===st).reduce((t,r)=>t+num(r.nilai_rencana),0);
+  const chipRk=s=>`<span class="chip ${s==='Rencana'?'':s==='Diproses'?'warn':s==='Terkontrak'?'good':'mute'}">${esc(s)}</span>`;
+  $('#view').innerHTML=`<div class="pagehead"><div><h2>Rencana kontrak</h2><p>Baris berstatus RENCANA di sheet RINCIAN PER SUB PRK ditambah rencana yang diinput lewat aplikasi.</p></div><div class="grow"></div>${canWrite('RENCANA_KONTRAK')?'<button class="primary" type="button" onclick="editRencana()">Tambah rencana</button>':''}</div>
+  <div class="tiles">${tile('Rencana',M(sum('Rencana')),R.filter(r=>r.status==='Rencana').length+' belum jadi paket','r','#6b5bd3','#ecebfb')}${tile('Diproses',M(sum('Diproses')),R.filter(r=>r.status==='Diproses').length+' sudah jadi paket','p','#d98e04','var(--warn-soft)')}${tile('Terkontrak',M(sum('Terkontrak')),R.filter(r=>r.status==='Terkontrak').length+' rencana','k','var(--teal)','var(--teal-soft)')}</div>
+  <div class="panel filters">
+    <label for="rp">PRK<select id="rp">${opt(D.PRK.map(p=>({v:p.no_prk,l:p.no_prk+' '+p.uraian})),RF.prk,'Semua PRK')}</select></label>
+    <label for="rs">Status<select id="rs">${opt(RK_STATUS,RF.status,'Semua status')}</select></label>
+    <label for="rb">Bidang<select id="rb">${opt(BIDANG,RF.bidang,'Semua bidang')}</select></label>
+    <label for="rq">Cari<input id="rq" value="${esc(RF.q)}" placeholder="kabel kopel"></label></div>
+  <div class="panel scroll"><div class="muted" style="margin-bottom:8px">${rows.length} rencana · Rp ${rp(rows.reduce((t,r)=>t+num(r.nilai_rencana),0))}</div>
+  <table><thead><tr><th>Pekerjaan</th><th>Sub PRK</th><th>Jenis</th><th class="n">Nilai rencana</th><th>Target kontrak</th><th>Bidang / PIC</th><th>Status</th><th>Sumber</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr class="click" onclick="detailRencana('${esc(r.id_rk)}')"><td style="font-weight:600">${esc(r.pekerjaan)}</td><td class="muted">${esc(subName(r.id_sub))}</td><td>${esc(r.jenis_kontrak||'')}</td><td class="n">${rp(r.nilai_rencana)}</td><td>${esc(r.target_kontrak||'-')}</td><td>${esc([r.bidang,r.pic].filter(Boolean).join(' / ')||'-')}</td><td>${chipRk(r.status)}${r.id_paket?` <span class="muted" style="font-size:12px">${esc(r.id_paket)}</span>`:''}</td><td><span class="chip ${r.sumber==='Aplikasi'?'teal':'mute'}">${r.sumber==='Aplikasi'?'Aplikasi':'Workbook'}</span></td></tr>`).join('')||'<tr><td colspan="8">Belum ada rencana kontrak.</td></tr>'}</tbody></table></div>`;
+  [['rp','prk'],['rs','status'],['rb','bidang']].forEach(([i,k])=>$('#'+i).addEventListener('change',e=>{RF[k]=e.target.value;vRencana();}));
+  $('#rq').addEventListener('change',e=>{RF.q=e.target.value;vRencana();});
+}
+function detailRencana(id){
+  const r=D.RENCANA_KONTRAK.find(x=>x.id_rk===id); const s=C.sub.find(x=>x.id_sub===r.id_sub)||{};
+  modal(`<div class="head"><div><div class="muted">${esc(s.no_prk||'')} · ${esc(s.uraian||'')}</div><h2>${esc(r.pekerjaan)}</h2></div><button type="button" onclick="close_()">Tutup</button></div>
+  <div class="row"><span class="chip">${esc(r.status)}</span><span class="chip ${r.sumber==='Aplikasi'?'teal':'mute'}">Sumber: ${esc(r.sumber)}</span>${r.id_paket?`<span class="chip good">Paket ${esc(r.id_paket)}</span>`:''}<div class="grow"></div>
+   ${canWrite('RENCANA_KONTRAK')?`<button type="button" onclick="editRencana('${esc(id)}')">Ubah rencana</button>`:''}${!r.id_paket&&canWrite('PAKET')&&r.status!=='Batal'?`<button class="primary" type="button" onclick="jadikanPaket('${esc(id)}')">Jadikan paket</button>`:''}</div>
+  <table><tbody>
+   <tr><th>Nilai rencana</th><td class="n">Rp ${rp(r.nilai_rencana)}</td><th>Jenis kontrak</th><td>${esc(r.jenis_kontrak||'-')} · ${esc(r.jalur||'')}</td></tr>
+   <tr><th>Sisa bebas sub PRK</th><td class="n" style="color:${s.sisaRk<0?'var(--bad)':'inherit'}">Rp ${rp(s.sisaRk)}</td><th>Bidang / PIC</th><td>${esc(r.bidang||'-')} / ${esc(r.pic||'-')}</td></tr>
+   <tr><th>Target ND</th><td>${esc(r.target_nd||'-')}</td><th>Target kontrak / bayar</th><td>${esc(r.target_kontrak||'-')} / ${esc(r.target_bayar||'-')}</td></tr>
+   <tr><th>Prioritas</th><td>${esc(r.prioritas||'-')}</td><th>Catatan</th><td>${esc(r.catatan||'-')}</td></tr></tbody></table>
+  ${r.sumber!=='Aplikasi'?'<div class="msg info">Nama pekerjaan, sub PRK, jenis, dan nilai rencana dibaca dari sheet RINCIAN PER SUB PRK. Ubah di sheet itu; aplikasi menyimpan target, PIC, prioritas, dan catatan.</div>':''}`);
+}
+function editRencana(id){
+  const r=id?D.RENCANA_KONTRAK.find(x=>x.id_rk===id):{status:'Rencana',jenis_kontrak:'PENGADAAN',jalur:'Pengadaan Langsung',sumber:'Aplikasi'};
+  const wb=r.sumber&&r.sumber!=='Aplikasi';
+  const f=[{k:'id_sub',label:'Sub PRK',type:'select',options:subOpts(),req:1,wide:1,ro:wb},{k:'pekerjaan',label:'Nama pekerjaan',req:1,wide:1,ro:wb},
+    {k:'jenis_kontrak',label:'Jenis kontrak',type:'select',options:['KR','PENGADAAN','LUMPSUM','KONTRAK SPOT'],ro:wb},{k:'jalur',label:'Jalur pengadaan',type:'select',options:JALUR},
+    {k:'nilai_rencana',label:'Nilai rencana (Rp)',type:'number',req:1,ro:wb},{k:'status',label:'Status',type:'select',options:['Rencana','Batal']},
+    {k:'bidang',label:'Bidang',type:'select',options:BIDANG,blank:'-'},{k:'pic',label:'PIC'},{k:'prioritas',label:'Prioritas',type:'select',options:['Tinggi','Sedang','Rendah'],blank:'-'},
+    {k:'target_nd',label:'Target ND',type:'date'},{k:'target_kontrak',label:'Target kontrak',type:'date'},{k:'target_bayar',label:'Target bayar',type:'date'},{k:'catatan',label:'Catatan',type:'textarea',wide:1}];
+  const fn=async o=>{ if(wb){ ['id_sub','pekerjaan','jenis_kontrak','nilai_rencana'].forEach(k=>o[k]=r[k]); } o.sumber=r.sumber||'Aplikasi'; o.diubah=TODAY; const s=await save('RENCANA_KONTRAK',o); if(!s) return false; route(); };
+  fn.check=o=>{ const s=C.sub.find(x=>x.id_sub===o.id_sub); const before=id&&r.status==='Rencana'&&r.id_sub===o.id_sub?num(r.nilai_rencana):0;
+    if(s&&o.status==='Rencana'&&num(o.nilai_rencana)>s.sisaRk+before) return `Nilai rencana melebihi sisa bebas sub PRK (Rp ${rp(s.sisaRk+before)}). Klik Simpan lagi untuk tetap menyimpan sebagai perlu rekomposisi.`; return null; };
+  form(id?'Ubah rencana kontrak':'Tambah rencana kontrak',f,r,fn, wb?'Rencana ini dari sheet RINCIAN PER SUB PRK: pekerjaan, sub PRK, jenis, dan nilai hanya bisa diubah di sheet tersebut.':'');
+}
+function jadikanPaket(id){
+  const r=D.RENCANA_KONTRAK.find(x=>x.id_rk===id);
+  close_();
+  editPaket(null,{id_sub:r.id_sub,nama_paket:r.pekerjaan,rab:r.nilai_rencana,jalur:r.jalur||(r.jenis_kontrak==='KR'?'Kontrak Rinci (KHS)':'Pengadaan Langsung'),jenis_kontrak:['KR','PENGADAAN','LUMPSUM'].includes(r.jenis_kontrak)?r.jenis_kontrak:'PENGADAAN',
+    status:'Persiapan',bidang:r.bidang||'',pic:r.pic||'',target_nd:r.target_nd||'',target_terbit:r.target_kontrak||'',catatan:'Dari rencana kontrak '+id,_rk:id});
+}
+
+/* ===== Tampilan: Paket ===== */
+let PF={prk:'',status:'',bidang:'',q:''};
+function vPaket(){
+  const subName=id=>(D.SUB_PRK.find(s=>s.id_sub===id)||{}).uraian||'';
+  const rows=D.PAKET.filter(p=>(!PF.prk||p.no_prk===PF.prk)&&(!PF.status||p.status===PF.status)&&(!PF.bidang||p.bidang===PF.bidang)&&(!PF.q||(p.nama_paket+' '+p.id_paket).toLowerCase().includes(PF.q.toLowerCase())));
+  const tot=rows.reduce((t,p)=>t+num(p.rab),0);
+  $('#view').innerHTML=`<div class="row"><h2>Paket pekerjaan</h2><div class="grow"></div>${canWrite('PAKET')?'<button class="primary" type="button" onclick="editPaket()">Tambah paket</button>':''}</div>
+  <div class="panel filters">
+    <label for="fp">PRK<select id="fp">${opt(D.PRK.map(p=>({v:p.no_prk,l:p.no_prk})),PF.prk,'Semua PRK')}</select></label>
+    <label for="fs">Status<select id="fs">${opt(STATUS,PF.status,'Semua status')}</select></label>
+    <label for="fb">Bidang<select id="fb">${opt(BIDANG,PF.bidang,'Semua bidang')}</select></label>
+    <label for="fq">Cari<input id="fq" value="${esc(PF.q)}" placeholder="RTU keypoint"></label></div>
+  <div class="panel scroll"><div class="muted" style="margin-bottom:6px">${rows.length} paket · RAB/nilai Rp ${rp(tot)}</div>
+  <table><thead><tr><th>ID</th><th>Paket</th><th>Sub PRK</th><th>Bidang</th><th>Jalur</th><th>Status</th><th class="n">RAB / HPE</th><th class="n">Nilai kontrak berlaku</th><th>ND User</th></tr></thead><tbody>
+  ${rows.map(p=>{const ks=C.kontrak.filter(k=>k.id_paket===p.id_paket);return `<tr class="click" onclick="detailPaket('${p.id_paket}')"><td class="mono">${p.id_paket}</td><td>${esc(p.nama_paket)}</td><td class="muted">${esc(subName(p.id_sub))}</td><td>${esc(p.bidang)}</td><td>${esc(p.jalur)}</td>
+    <td>${chipStatus(p.status)}</td><td class="n">${rp(p.rab)}</td><td class="n">${ks.length?rp(ks.reduce((t,k)=>t+k.berlaku,0)):'-'}</td><td class="mono" style="font-size:12px">${esc(p.tgl_nd_user||'-')}</td></tr>`}).join('')}</tbody></table></div>`;
+  [['fp','prk'],['fs','status'],['fb','bidang']].forEach(([i,k])=>$('#'+i).addEventListener('change',e=>{PF[k]=e.target.value;vPaket();}));
+  $('#fq').addEventListener('change',e=>{PF.q=e.target.value;vPaket();});
+}
+function chipStatus(s){ const c=PRE.includes(s)?'warn':s==='Batal'?'mute':'good'; return `<span class="chip ${c}">${esc(s)}</span>`; }
+function subOpts(){ return C.sub.map(s=>({v:s.id_sub,l:`${s.no_prk.replace('2026.DJBT.','')} · ${s.uraian} (sisa Rp ${rp(s.sisa)})`})); }
+function editPaket(id,pre){
+  const p=id?D.PAKET.find(x=>x.id_paket===id):Object.assign({status:'Rencana',jalur:JALUR[0]},pre||{});
+  const f=[{k:'id_sub',label:'Sub PRK',type:'select',options:subOpts(),req:1,wide:1},{k:'nama_paket',label:'Nama pekerjaan (harus sama persis dengan uraian di Mon Pengadaan)',req:1,wide:1},{k:'bidang',label:'Bidang',type:'select',options:BIDANG,blank:'-'},{k:'pic',label:'PIC'},
+    {k:'jalur',label:'Jalur pengadaan',type:'select',options:JALUR,req:1},{k:'jenis_kontrak',label:'Jenis kontrak (kolom F TERKONTRAK)',type:'select',options:['KR','PENGADAAN','LUMPSUM'],req:1},{k:'kategori',label:'Kategori',type:'select',options:KAT,blank:'-'},{k:'rab',label:'RAB / HPE (Rp)',type:'number',req:1},{k:'status',label:'Status',type:'select',options:STATUS,req:1},
+    {k:'target_nd',label:'Target ND',type:'date'},{k:'target_terbit',label:'Target terbit',type:'date'},{k:'target_bast',label:'Target BAST',type:'date'},
+    {k:'no_nd_user',label:'No ND User'},{k:'tgl_nd_user',label:'Tgl ND User',type:'date'},{k:'no_nd_man',label:'No ND Manajer'},{k:'tgl_nd_man',label:'Tgl ND Manajer',type:'date'},
+    {k:'no_pj_khs',label:'No penunjukan KHS (bila KR)'},{k:'no_pr',label:'No PR'},{k:'tgl_pr',label:'Tgl PR',type:'date'},{k:'catatan',label:'Catatan (wajib bila melebihi pagu)',type:'textarea',wide:1}];
+  const fn=async o=>{ o.no_prk=(D.SUB_PRK.find(s=>s.id_sub===o.id_sub)||{}).no_prk; const rk=o._rk; delete o._rk; const r=await save('PAKET',o); if(!r) return false;
+    if(rk){ const x=D.RENCANA_KONTRAK.find(z=>z.id_rk===rk); if(x) await save('RENCANA_KONTRAK',{...x,status:'Diproses',id_paket:r.id_paket}); } route(); };
+  fn.check=o=>{
+    const s=C.sub.find(x=>x.id_sub===o.id_sub); const before=id&&p.id_sub===o.id_sub&&PRE.includes(p.status)?num(p.rab):0;
+    const sisa=s?s.sisa+before:0;
+    if(PRE.includes(o.status) && num(o.rab)>sisa){ if(!o.catatan) return `RAB melebihi sisa bebas sub PRK (Rp ${rp(sisa)}). Isi catatan rekomposisi lalu klik Simpan lagi.`; return `RAB melebihi sisa bebas (Rp ${rp(sisa)}). Paket akan ditandai perlu rekomposisi. Klik Simpan lagi untuk melanjutkan.`; }
+    if(o.tgl_nd_user&&o.tgl_nd_man&&o.tgl_nd_user>o.tgl_nd_man) return 'Tanggal ND User setelah ND Manajer. Periksa lagi, atau klik Simpan untuk tetap menyimpan.';
+    return null; };
+  if(!p.jenis_kontrak) p.jenis_kontrak=(p.jalur||'').startsWith('Kontrak Rinci')?'KR':'PENGADAAN';
+  form(id?'Ubah paket '+id:'Tambah paket',f,p,fn,'Paket baru ditambahkan sebagai baris di sheet TERKONTRAK; kolom rumus disalin dari baris di atasnya. Status berubah menjadi Terkontrak otomatis begitu Laksda mengisi Mon Pengadaan dengan uraian yang sama.');
+}
+function detailPaket(id){
+  const p=D.PAKET.find(x=>x.id_paket===id), ks=C.kontrak.filter(k=>k.id_paket===id), boq=D.BOQ.filter(b=>b.id_paket===id);
+  const s=C.sub.find(x=>x.id_sub===p.id_sub)||{};
+  const item=i=>(D.KATALOG.find(x=>x.id_item===i)||{}).uraian||i;
+  modal(`<div class="head"><div><div class="muted mono">${p.id_paket} · ${esc(p.no_prk)}</div><h2>${esc(p.nama_paket)}</h2></div><button type="button" onclick="close_()">Tutup</button></div>
+  <div class="row">${chipStatus(p.status)}${p.baris?`<span class="chip mute">TERKONTRAK baris ${p.baris}</span>`:''}${p.cek_mon?`<span class="chip ${p.cek_mon==='OK'?'good':'warn'}">Mon Pengadaan: ${p.cek_mon}</span>`:''}<span class="chip mute">${esc(p.jalur)}</span><span class="chip mute">${esc(p.bidang||'-')}</span><span class="chip mute">${esc(s.uraian||'')}</span><div class="grow"></div>${canWrite('PAKET')?`<button type="button" onclick="editPaket('${id}')">Ubah paket</button>`:''}</div>
+  <table><tbody>
+   <tr><th>RAB / HPE</th><td class="n">${rp(p.rab)}</td><th>ND User</th><td>${esc(p.no_nd_user||'-')} · ${esc(p.tgl_nd_user||'')}</td></tr>
+   <tr><th>Sisa bebas sub PRK</th><td class="n">${rp(s.sisa)}</td><th>ND Manajer</th><td>${esc(p.no_nd_man||'-')} · ${esc(p.tgl_nd_man||'')}</td></tr>
+   <tr><th>Target terbit / BAST</th><td>${esc(p.target_terbit||'-')} / ${esc(p.target_bast||'-')}</td><th>PR / Pj KHS</th><td>${esc(p.no_pr||'-')} · ${esc(p.tgl_pr||'')} · ${esc(p.no_pj_khs||'')}</td></tr></tbody></table>
+  <div class="row"><h3 style="margin:0">Kontrak</h3><div class="grow"></div>${canWrite('KONTRAK')?`<button type="button" onclick="editKontrak(null,'${id}')">Tambah kontrak</button>`:''}</div>
+  ${ks.length?`<table><thead><tr><th>No kontrak</th><th>Vendor</th><th class="n">Nilai awal</th><th class="n">Amandemen</th><th class="n">Berlaku</th><th>Masa</th><th></th></tr></thead><tbody>${ks.map(k=>`<tr><td class="mono" style="font-size:12px">${esc(k.no_kontrak)}</td><td>${esc(k.vendor)}</td><td class="n">${rp(k.nilai_awal)}</td><td class="n">${k.amd?rp(k.amd):'-'}</td><td class="n">${rp(k.berlaku)}</td><td>${esc(k.awal)} s.d. ${esc(k.akhir)}</td><td>${canWrite('AMANDEMEN')?`<button type="button" onclick="editAmd('Kontrak','${k.id_kontrak}')">Catat amandemen</button>`:''}</td></tr>`).join('')}</tbody></table>`:'<div class="muted">Belum ada kontrak.</div>'}
+  <div class="row"><h3 style="margin:0">BoQ per UP3</h3><div class="grow"></div>${canWrite('BOQ')?`<button type="button" onclick="editBoq('${id}')">Tambah baris BoQ</button>`:''}</div>
+  ${boq.length?`<table><thead><tr><th>Item</th><th>UP3</th><th class="n">Volume</th><th class="n">Harga</th><th class="n">Nilai</th></tr></thead><tbody>${boq.map(b=>`<tr><td>${esc(item(b.id_item))}</td><td>${esc(b.up3)}</td><td class="n">${rp(b.volume)}</td><td class="n">${rp(b.harga)}</td><td class="n">${rp(num(b.volume)*num(b.harga))}</td></tr>`).join('')}</tbody></table>`:'<div class="muted">BoQ belum diisi. BoQ dibutuhkan untuk menghitung progres fisik terbobot.</div>'}`);
+}
+function editBoq(pid){
+  const p=D.PAKET.find(x=>x.id_paket===pid);
+  const rm=D.RENCANA_MATERIAL.filter(r=>r.id_sub===p.id_sub).map(r=>r.id_item);
+  const items=D.KATALOG.filter(i=>!rm.length||rm.includes(i.id_item)).map(i=>({v:i.id_item,l:`${i.uraian} (Rp ${rp(i.harga_satuan)})`}));
+  if(!items.length){ toast('Belum ada item di katalog atau rencana material sub PRK ini.','warn'); return; }
+  form('Tambah baris BoQ',[{k:'id_item',label:'Item (dari rencana material sub PRK)',type:'select',options:items,req:1,wide:1},{k:'up3',label:'UP3',type:'select',options:UP3.map(u=>({v:u,l:u+' '+UP3_NAMA[u]})),req:1},{k:'volume',label:'Volume',type:'number',req:1},{k:'harga',label:'Harga satuan kontrak (kosongkan = harga katalog)',type:'number'}],{},
+  async o=>{ o.id_paket=pid; if(o.harga==='') o.harga=num((D.KATALOG.find(i=>i.id_item===o.id_item)||{}).harga_satuan);
+    const rv=D.RENCANA_MATERIAL.find(r=>r.id_sub===p.id_sub&&r.id_item===o.id_item); const sudah=D.BOQ.filter(b=>b.id_item===o.id_item&&b.up3===o.up3&&D.PAKET.find(x=>x.id_paket===b.id_paket&&x.id_sub===p.id_sub)).reduce((t,b)=>t+num(b.volume),0);
+    if(rv && sudah+num(o.volume)>num(rv[o.up3])) toast(`Volume melebihi rencana material ${o.up3} (${rv[o.up3]}). Tetap disimpan, ditandai melebihi rencana.`,'warn');
+    const r=await save('BOQ',o); if(!r) return false; detailPaket(pid); });
+}
+
+/* ===== Tampilan: Kontrak dan amandemen ===== */
+let KQ='';
+let KF='';
+function vKontrak(){
+  const lvF={ingat:k=>['lewat','kritis','segera'].includes(k.lv),lewat:k=>k.lv==='lewat',kritis:k=>k.lv==='kritis',segera:k=>k.lv==='segera',pantau:k=>k.lv==='pantau',bast:k=>!!k.bast};
+  let rows=C.kontrak.filter(k=>(!KF||lvF[KF](k))&&(!KQ||(k.no_kontrak+' '+k.vendor+' '+(k.paket.nama_paket||'')).toLowerCase().includes(KQ.toLowerCase())));
+  if(KF) rows=rows.slice().sort((a,b)=>(a.sisaHari??1e9)-(b.sisaHari??1e9));
+  const amds=D.AMANDEMEN.slice().sort((a,b)=>String(b.tanggal).localeCompare(a.tanggal));
+  const ref=a=>a.objek==='KHS'?((C.khs.find(h=>h.id_khs===a.id_ref)||{}).uraian||a.id_ref)+' · '+((C.khs.find(h=>h.id_khs===a.id_ref)||{}).pemenang||''):((C.kById[a.id_ref]||{}).no_kontrak||a.id_ref)+' · '+((C.kById[a.id_ref]||{}).vendor||'');
+  const n=f=>C.kontrak.filter(lvF[f]).length;
+  const seg=[['','Semua',C.kontrak.length],['ingat','Perlu tindakan',n('ingat')],['lewat','Lewat masa',n('lewat')],['kritis',LV_NAMA.kritis,n('kritis')],['segera',LV_NAMA.segera,n('segera')],['pantau',LV_NAMA.pantau,n('pantau')],['bast','Sudah BAST',n('bast')]];
+  $('#view').innerHTML=`<div class="row"><h2>Kontrak dan amandemen</h2><div class="grow"></div><label for="kq" style="min-width:260px">Cari<input id="kq" value="${esc(KQ)}" placeholder="vendor atau nomor kontrak"></label></div>
+  <div class="tiles">${tile('Kontrak',C.kontrak.length,M(C.kontrak.reduce((t,k)=>t+k.berlaku,0))+' nilai berlaku','k','var(--navy)','var(--accent-soft)')}
+   ${tile('Lewat masa, belum BAST',n('lewat'),'perlu amandemen atau BAST','p','var(--bad)','var(--bad-soft)')}
+   ${tile(`Berakhir ≤ ${INGAT.segera} hari`,n('kritis')+n('segera'),`${n('kritis')} di antaranya ≤ ${INGAT.kritis} hari`,'p','#d98e04','var(--warn-soft)')}
+   ${tile('Amandemen tercatat',D.AMANDEMEN.length,`${D.AMANDEMEN.filter(a=>a.objek==='KHS').length} KHS · ${D.AMANDEMEN.filter(a=>a.objek==='Kontrak').length} kontrak`,'r','var(--teal)','var(--teal-soft)')}</div>
+  <div class="seg" role="group" aria-label="Filter pengingat">${seg.map(([v,l,c])=>`<button type="button" class="${KF===v?'on':''}" onclick="KF='${v}';vKontrak()">${l}<span class="n">${c}</span></button>`).join('')}</div>
+  <div class="panel scroll"><table><thead><tr><th>Paket · no kontrak</th><th>Vendor</th><th class="n">Berlaku</th><th>Akhir kontrak</th><th>Pengingat</th><th style="width:150px">Fisik</th><th class="n">Terbayar</th><th></th></tr></thead><tbody>
+  ${rows.map(k=>`<tr><td><div class="clamp" title="${esc(k.paket.nama_paket||'')}" style="font-weight:600">${esc(tc(k.paket.nama_paket||''))}</div><div class="muted mono" style="font-size:11.5px">${esc(k.no_kontrak||k.id_kontrak)}</div></td><td><div class="clamp" style="max-width:170px;min-width:120px">${esc(tc(k.vendor))}</div></td><td class="n">${rp(k.berlaku)}${k.amd?`<div class="muted" style="font-size:11.5px">amd ${k.amd>0?'+':''}${rp(k.amd)}</div>`:''}</td>
+   <td style="white-space:nowrap">${esc(k.awal||'')}<br><b>${esc(k.akhirBerlaku||'-')}</b>${k.diperpanjang?`<div class="muted" style="font-size:11.5px">semula ${esc(k.akhir)}</div>`:''}</td><td>${sisaChip(k)}</td>
+   <td>${k.fis?meter(k.fis.pct)+`<div class="muted" style="font-size:11.5px">${esc(k.fis.ket)}</div>`:k.fisik!==null?meter(k.fisik)+'<div class="muted" style="font-size:11.5px">dari BoQ</div>':'<span class="muted">Belum tercatat</span>'}</td><td class="n">${rp(k.bayar)}</td>
+   <td><div style="display:flex;flex-direction:column;gap:4px">${canWrite('AMANDEMEN')?`<button type="button" class="mini" onclick="editAmd('Kontrak','${k.id_kontrak}')">Amandemen</button>`:''}${canWrite('KONTRAK')?`<button type="button" class="mini ghost" onclick="editKontrak('${k.id_kontrak}')">Ubah / BAST</button>`:''}</div></td></tr>`).join('')||'<tr><td colspan="8" class="muted">Tidak ada kontrak pada filter ini.</td></tr>'}</tbody></table></div>
+  <div class="panel"><h3>Catatan amandemen terbaru</h3>${amds.length?`<div class="timeline">${amds.map(a=>`<div><div class="row"><b>${esc(a.no_amd)}</b><span class="chip ${a.status==='Rencana'?'warn':'mute'}">${esc(a.objek)} · ${esc(a.status||'Terbit')}</span><span class="muted">${esc(a.tanggal)}</span></div>
+    <div>${esc(ref(a))}</div><div class="muted">${esc(a.jenis)}: Rp ${rp(a.nilai_sebelum)} → Rp ${rp(a.nilai_sesudah)} (${num(a.nilai_sesudah)-num(a.nilai_sebelum)>=0?'+':''}${rp(num(a.nilai_sesudah)-num(a.nilai_sebelum))})${a.akhir_sesudah&&a.akhir_sesudah!==a.akhir_sebelum?` · akhir ${esc(a.akhir_sebelum)} → ${esc(a.akhir_sesudah)}`:''}</div>
+    ${a.alasan||a.catatan?`<div>${esc(a.alasan)}${a.catatan?' · '+esc(a.catatan):''}</div>`:''}</div>`).join('')}</div>`:'<div class="muted">Belum ada amandemen.</div>'}</div>`;
+  $('#kq').addEventListener('change',e=>{KQ=e.target.value;vKontrak();});
+}
+function editKontrak(id,pid){
+  const k=id?D.KONTRAK.find(x=>x.id_kontrak===id):{id_paket:pid,skema_bayar:'100% saat BAST'};
+  const p=D.PAKET.find(x=>x.id_paket===(k.id_paket||pid));
+  form(id?'Ubah kontrak':'Tambah kontrak: '+(p.nama_paket||'').slice(0,60),[{k:'no_kontrak',label:'Nomor kontrak / SPK / KR',req:1,wide:1},{k:'vendor',label:'Vendor',req:1},{k:'nilai_awal',label:'Nilai kontrak awal (Rp)',type:'number',req:1,ro:k.sumber==='TERKONTRAK'},
+   {k:'id_khs',label:'KHS induk (bila KR)',type:'select',options:C.khs.map(h=>({v:h.id_khs,l:`${h.uraian.slice(0,50)} · ${h.pemenang} (sisa Rp ${rp(h.sisa)})`})),blank:'Bukan KR'},
+   {k:'awal',label:'Awal kontrak',type:'date',req:1},{k:'akhir',label:'Akhir kontrak',type:'date',req:1},{k:'no_po',label:'Nomor PO'},{k:'tgl_po',label:'Tanggal PO',type:'date'},
+   {k:'skema_bayar',label:'Skema bayar',type:'select',options:['100% saat BAST','Termin','Bulanan']},{k:'no_bast',label:'Nomor BAST'},{k:'tgl_bast',label:'Tanggal BAST',type:'date'}],k,
+  Object.assign(async o=>{ o.id_paket=p.id_paket; o.id_sub=p.id_sub; if(k.sumber==='TERKONTRAK') o.nilai_awal=k.nilai_awal; const r=await save('KONTRAK',o); if(!r) return false;
+    if(PRE.includes(p.status)) await save('PAKET',{...p,status:'Terkontrak'});
+    if(o.tgl_bast && !['Siap tagih','Terbayar'].includes(p.status)) await save('PAKET',{...p,status:'Siap tagih'}); route(); },
+   {check:o=>{ if(o.awal&&o.akhir&&o.awal>o.akhir) return 'Awal kontrak setelah akhir kontrak.'; const h=C.khs.find(x=>x.id_khs===o.id_khs); const before=id&&k.id_khs===o.id_khs?num(k.nilai_awal):0;
+     if(h&&num(o.nilai_awal)>h.sisa+before) return `Nilai KR melebihi sisa kuota KHS (Rp ${rp(h.sisa+before)}). Klik Simpan lagi untuk tetap menyimpan.`; if(h&&!h.hidup) return 'KHS induk sudah berakhir. Klik Simpan lagi untuk tetap menyimpan.'; return null; }}),
+   k.sumber==='TERKONTRAK'?'Nomor kontrak, vendor, nilai, masa, dan PO dibaca dari Mon Pengadaan dan TERKONTRAK. Isian di sini disimpan di tab APP_KONTRAK untuk melengkapi (BAST, skema bayar) atau mengoreksi sementara.':'Kontrak ini belum ada di Mon Pengadaan. Isian disimpan sementara di tab APP_KONTRAK sampai Laksda memperbaruinya.');
+}
+function editAmd(objek,id){
+  const base=objek==='KHS'?C.khs.find(h=>h.id_khs===id):C.kById[id];
+  const nilaiNow=base.berlaku, akhirNow=base.akhirBerlaku||base.akhir;
+  form(`Catat amandemen ${objek}: ${objek==='KHS'?base.uraian.slice(0,50)+' · '+base.pemenang:base.no_kontrak}`,[
+   {k:'no_amd',label:'Nomor amandemen',req:1,wide:1},{k:'tanggal',label:'Tanggal',type:'date',req:1,def:TODAY},{k:'status',label:'Status',type:'select',options:['Terbit','Rencana']},
+   {k:'jenis',label:'Jenis',type:'select',options:['Nilai','Waktu','Volume / lingkup','Nilai dan waktu','Nilai, waktu, dan volume'],req:1},
+   {k:'nilai_sebelum',label:'Nilai sebelum (Rp)',type:'number',def:nilaiNow,ro:1},{k:'nilai_sesudah',label:'Nilai sesudah (Rp)',type:'number',req:1,def:nilaiNow},
+   {k:'akhir_sebelum',label:'Akhir sebelum',type:'date',def:akhirNow,ro:1},{k:'akhir_sesudah',label:'Akhir sesudah',type:'date',def:akhirNow},
+   {k:'alasan',label:'Alasan',type:'select',options:ALASAN_AMD,req:1},{k:'sumber_anggaran',label:'Sumber anggaran selisih',type:'select',options:subOpts(),blank:'Sub PRK yang sama'},
+   {k:'catatan',label:'Catatan amandemen',type:'textarea',wide:1}],{},
+  async o=>{ o.objek=objek; o.id_ref=id; o.id_sub=objek==='Kontrak'?(base.id_sub||base.paket.id_sub):''; const r=await save('AMANDEMEN',o); if(!r) return false; route(); },
+  'Status Rencana dipakai untuk spare pagu amandemen; nilainya belum menambah nilai berlaku.');
+}
+
+/* ===== Tampilan: KHS ===== */
+function vKhs(){
+  const g={}; C.khs.forEach(h=>(g[h.no_khs]=g[h.no_khs]||[]).push(h));
+  $('#view').innerHTML=`<div class="row"><h2>KHS dan sisa kuota</h2><div class="grow"></div>${canWrite('KHS')?'<button type="button" onclick="editKhs()">Tambah pemenang KHS</button>':''}</div>
+  <div class="msg info">Data KHS dibaca dari sheet IMPORTRANGE KHS PENGADAAN. Sisa kuota = nilai KHS setelah amandemen dikurangi nilai KR yang sudah terbit. Amandemen yang dicatat di aplikasi disimpan di tab APP_AMANDEMEN.</div>
+  <div class="panel scroll"><table><thead><tr><th>KHS</th><th>Pemenang</th><th class="n">Nilai awal</th><th class="n">Amandemen</th><th class="n">Berlaku</th><th class="n">KR terbit</th><th class="n">Sisa kuota</th><th>Berakhir</th><th>Status</th><th></th></tr></thead><tbody>
+  ${Object.values(g).map(arr=>arr.map((h,i)=>`<tr>${i===0?`<td rowspan="${arr.length}"><div class="mono muted">${esc(h.no_khs)} · ${esc(h.bidang)}</div>${esc(h.uraian)}</td>`:''}<td>${esc(h.pemenang)}</td><td class="n">${rp(h.nilai_awal)}</td><td class="n">${h.amd?rp(h.amd):'-'}</td><td class="n">${rp(h.berlaku)}</td><td class="n">${rp(h.terpakai)}</td>
+   <td class="n" style="color:${h.sisa<0?'var(--bad)':'inherit'}">${rp(h.sisa)}</td><td style="white-space:nowrap">${esc(h.akhirBerlaku||'-')}</td>
+   <td>${h.hidup?(h.sisaHari!==null&&h.sisaHari<=60?`<span class="chip warn">Hidup, ${h.sisaHari} hari</span>`:'<span class="chip good">Hidup</span>'):'<span class="chip mute">Mati</span>'}</td>
+   <td>${canWrite('AMANDEMEN')?`<button type="button" onclick="editAmd('KHS','${h.id_khs}')">Amandemen</button>`:''}</td></tr>`).join('')).join('')}</tbody></table></div>`;
+}
+function editKhs(){
+  form('Tambah pemenang KHS',[{k:'no_khs',label:'No urut KHS (mis. 014)',req:1},{k:'uraian',label:'Uraian KHS',req:1,wide:1},{k:'bidang',label:'Bidang',type:'select',options:BIDANG},{k:'rks',label:'No RKS'},{k:'hpe',label:'HPE (Rp)',type:'number'},
+   {k:'urutan',label:'Urutan pemenang',type:'number',def:1},{k:'no_pj',label:'No penunjukan (Pj)',req:1},{k:'pemenang',label:'Pemenang',req:1},{k:'nilai_awal',label:'Nilai kontrak (Rp)',type:'number',req:1},{k:'awal',label:'Awal',type:'date'},{k:'akhir',label:'Akhir',type:'date'}],{},
+   async o=>{ o.id_khs=`KHS-${o.no_khs}-${o.urutan||1}`; const r=await save('KHS',o); if(!r) return false; route(); });
+}
+
+/* ===== Tampilan: Rencana material ===== */
+let MSUB='';
+function vMaterial(){
+  const subsWith=[...new Set(D.RENCANA_MATERIAL.map(r=>r.id_sub))];
+  if(!MSUB) MSUB=subsWith[0]||(D.SUB_PRK[0]||{}).id_sub;
+  const s=D.SUB_PRK.find(x=>x.id_sub===MSUB)||{};
+  const rows=D.RENCANA_MATERIAL.filter(r=>r.id_sub===MSUB);
+  const kat=id=>D.KATALOG.find(i=>i.id_item===id)||{};
+  const pk=D.PAKET.filter(p=>p.id_sub===MSUB).map(p=>p.id_paket);
+  const boqV=(it,u)=>D.BOQ.filter(b=>pk.includes(b.id_paket)&&b.id_item===it&&(!u||b.up3===u)).reduce((t,b)=>t+num(b.volume),0);
+  const kIds=C.kontrak.filter(k=>pk.includes(k.id_paket)).map(k=>k.id_kontrak);
+  const pasang=it=>{ let t=0; UP3.forEach(u=>{ kIds.forEach(k=>{ t+=Math.max(0,...D.PROGRES.filter(p=>p.id_kontrak===k&&p.id_item===it&&p.up3===u).map(p=>num(p.vol_terpasang))); }); }); return t; };
+  const tot=r=>UP3.reduce((t,u)=>t+num(r[u]),0);
+  const nilai=rows.reduce((t,r)=>t+tot(r)*num(kat(r.id_item).harga_satuan),0);
+  $('#view').innerHTML=`<div class="row"><h2>Rencana material per sub PRK</h2><div class="grow"></div>${canWrite('RENCANA_MATERIAL')?'<button class="primary" type="button" onclick="editRm()">Tambah item rencana</button>':''}</div>
+  <div class="panel filters"><label for="ms" class="wide">Sub PRK<select id="ms">${opt(D.SUB_PRK.map(x=>({v:x.id_sub,l:`${x.no_prk} · ${x.uraian}${subsWith.includes(x.id_sub)?'':' (belum ada rencana)'}`})),MSUB)}</select></label></div>
+  <div class="tiles"><div class="tile"><div class="l">Item direncanakan</div><div class="v">${rows.length}</div></div><div class="tile"><div class="l">Nilai rencana material (volume × harga katalog)</div><div class="v">${M(nilai)}</div><div class="n">AI Rencana sub PRK Rp ${rp(s.ai_rencana)}</div></div></div>
+  <div class="panel scroll">${rows.length?`<table><thead><tr><th>Item</th><th>Kategori</th><th class="n">Harga</th><th>Versi</th>${UP3.map(u=>`<th class="n" title="${UP3_NAMA[u]}">${u}</th>`).join('')}<th class="n">Rencana</th><th class="n">Di BoQ</th><th class="n">Terpasang</th><th></th></tr></thead><tbody>
+   ${rows.map(r=>{const t=tot(r),b=boqV(r.id_item),ps=pasang(r.id_item);return `<tr><td>${esc(r.uraian_item||kat(r.id_item).uraian)}</td><td><span class="chip mute">${esc(kat(r.id_item).kategori||'')}</span></td><td class="n">${rp(kat(r.id_item).harga_satuan)}</td><td class="muted" style="font-size:12px">${esc(r.versi)}</td>
+   ${UP3.map(u=>`<td class="n">${num(r[u])||''}</td>`).join('')}<td class="n"><b>${t}</b></td><td class="n" style="color:${b>t?'var(--bad)':'inherit'}">${b||'-'}</td><td class="n">${ps||'-'}</td>
+   <td>${canWrite('RENCANA_MATERIAL')?`<button type="button" onclick="editRm('${r.id_rm}')">Ubah</button>`:''}</td></tr>`}).join('')}</tbody></table>`:'<div class="muted">Belum ada rencana material untuk sub PRK ini. Klik Tambah item rencana.</div>'}</div>`;
+  $('#ms').addEventListener('change',e=>{MSUB=e.target.value;vMaterial();});
+}
+function editRm(id){
+  const r=id?D.RENCANA_MATERIAL.find(x=>x.id_rm===id):{id_sub:MSUB,versi:'LKAI'};
+  const f=[{k:'id_item',label:'Item katalog',type:'select',options:D.KATALOG.map(i=>({v:i.id_item,l:`${i.uraian} (Rp ${rp(i.harga_satuan)})`})),blank:'Item baru (isi di bawah)',wide:1},
+    {k:'item_baru',label:'Uraian item baru'},{k:'kategori_baru',label:'Kategori item baru',type:'select',options:['MDU','Non MDU + Jasa','Jasa']},{k:'satuan_baru',label:'Satuan',def:'unit'},{k:'harga_baru',label:'Harga satuan item baru (Rp)',type:'number'},
+    {k:'versi',label:'Versi',type:'select',options:['LKAI','Revisi 1','Revisi 2','Revisi 3','Revisi 1 + Revisi 2']}].concat(UP3.map(u=>({k:u,label:`${u} ${UP3_NAMA[u]}`,type:'number',def:0})));
+  form(id?'Ubah rencana material':'Tambah item rencana material',f,r,async o=>{
+    if(!o.id_item){ if(!o.item_baru){ toast('Pilih item katalog atau isi uraian item baru.','bad'); return false; }
+      const it=await save('KATALOG',{uraian:o.item_baru,kategori:o.kategori_baru,satuan:o.satuan_baru,harga_satuan:o.harga_baru||0}); if(!it) return false; o.id_item=it.id_item; }
+    const rec={id_rm:o.id_rm,id_sub:MSUB,id_item:o.id_item,uraian_item:(D.KATALOG.find(i=>i.id_item===o.id_item)||{}).uraian,versi:o.versi}; UP3.forEach(u=>rec[u]=num(o[u]));
+    const s=await save('RENCANA_MATERIAL',rec); if(!s) return false; route(); });
+}
+
+/* ===== Tampilan: Progres fisik ===== */
+let PK='';
+function vProgres(){
+  const withBoq=C.kontrak.filter(k=>D.BOQ.some(b=>b.id_paket===k.id_paket));
+  if(!PK) PK=(withBoq[0]||C.kontrak[0]||{}).id_kontrak||'';
+  const k=C.kById[PK]; const boq=k?D.BOQ.filter(b=>b.id_paket===k.id_paket):[];
+  const item=i=>(D.KATALOG.find(x=>x.id_item===i)||{}).uraian||i;
+  const last=(b)=>{ const ps=D.PROGRES.filter(p=>p.id_kontrak===PK&&p.id_item===b.id_item&&p.up3===b.up3).sort((a,c)=>num(c.bulan)-num(a.bulan)); return ps[0]; };
+  const bln=new Date().getMonth()+1;
+  $('#view').innerHTML=`<div class="row"><h2>Progres fisik per UP3</h2></div>
+  <div class="msg info">Isi volume terpasang kumulatif per item per UP3 setiap bulan. Persen fisik dihitung terbobot nilai item dari BoQ. Status kedatangan material MDU dicatat oleh PIC di kolom catatan.</div>
+  <div class="panel filters"><label for="pk" class="wide">Kontrak<select id="pk">${opt(C.kontrak.map(x=>({v:x.id_kontrak,l:`${D.BOQ.some(b=>b.id_paket===x.id_paket)?'':'(BoQ belum ada) '}${x.no_kontrak} · ${x.vendor} · ${(x.paket.nama_paket||'').slice(0,50)}`})),PK)}</select></label></div>
+  ${k?`<div class="tiles"><div class="tile"><div class="l">Fisik terbobot</div><div class="v">${k.fisik===null?'-':pct(k.fisik)}</div></div><div class="tile"><div class="l">Nilai berlaku</div><div class="v">${M(k.berlaku)}</div></div><div class="tile"><div class="l">Masa kontrak</div><div class="v" style="font-size:16px">${esc(k.awal)} s.d. ${esc(k.akhir)}</div></div></div>
+  <div class="panel scroll">${boq.length?`<table><thead><tr><th>Item</th><th>UP3</th><th class="n">Volume BoQ</th><th class="n">Terpasang terakhir</th><th>Bulan</th><th style="width:110px">Terpasang kumulatif</th><th>Catatan MDU</th><th>Kendala</th><th></th></tr></thead><tbody>
+  ${boq.map((b,i)=>{const l=last(b)||{};return `<tr><td>${esc(item(b.id_item))}</td><td>${esc(b.up3)}</td><td class="n">${rp(b.volume)}</td><td class="n">${l.vol_terpasang!==undefined?rp(l.vol_terpasang)+' <span class="muted">(bln '+l.bulan+')</span>':'-'}</td>
+   <td><select id="pb${i}" aria-label="Bulan">${opt([...Array(12)].map((_,m)=>({v:m+1,l:m+1})),bln)}</select></td><td><input id="pv${i}" type="number" min="0" step="any" value="${l.vol_terpasang??''}" aria-label="Volume terpasang"></td>
+   <td><input id="pm${i}" value="${esc(l.catatan_mdu||'')}" aria-label="Catatan MDU" placeholder="MDU tiba 12 Okt"></td><td><input id="pd${i}" value="${esc(l.kendala||'')}" aria-label="Kendala"></td>
+   <td>${canWrite('PROGRES')?`<button type="button" onclick="saveProg(${i})">Simpan</button>`:''}</td></tr>`}).join('')}</tbody></table>`:`<div class="muted">BoQ paket ini belum diisi. Buka menu Paket, pilih paket, lalu Tambah baris BoQ.</div>`}</div>`:'<div class="muted">Belum ada kontrak.</div>'}`;
+  $('#pk').addEventListener('change',e=>{PK=e.target.value;vProgres();});
+  window._boq=boq;
+}
+async function saveProg(i){
+  const b=window._boq[i], v=$('#pv'+i).value;
+  if(v===''){ toast('Isi volume terpasang dulu.','bad'); return; }
+  if(num(v)>num(b.volume)){ toast(`Volume terpasang melebihi BoQ (${b.volume}).`,'bad'); return; }
+  const bulan=num($('#pb'+i).value);
+  const prev=Math.max(0,...D.PROGRES.filter(p=>p.id_kontrak===PK&&p.id_item===b.id_item&&p.up3===b.up3&&num(p.bulan)<bulan).map(p=>num(p.vol_terpasang)));
+  if(num(v)<prev){ toast(`Kumulatif tidak boleh turun dari bulan sebelumnya (${prev}).`,'bad'); return; }
+  const ex=D.PROGRES.find(p=>p.id_kontrak===PK&&p.id_item===b.id_item&&p.up3===b.up3&&num(p.bulan)===bulan);
+  const r=await save('PROGRES',{id_progres:ex?ex.id_progres:'',id_kontrak:PK,id_item:b.id_item,up3:b.up3,bulan,vol_terpasang:num(v),catatan_mdu:$('#pm'+i).value,kendala:$('#pd'+i).value,oleh:USER.email||USER.nama,tanggal_input:TODAY});
+  if(r) vProgres();
+}
+
+/* ===== Tampilan: Progres fisik (workbook MONITORING PROGRESS FISIK AI 2026) ===== */
+let FF={prk:'',sub:'',sheet:'',up3:'',tahap:'',q:'',cek:''};
+const subNama=id=>(D.SUB_PRK.find(s=>s.id_sub===id)||{}).uraian||String(id||'').split('|').pop()||'(belum ada sub PRK)';
+const kerjaNama=sh=>((D.FISIK.PEKERJAAN.find(p=>p.sheet===sh)||{}).judul||sh);
+function tahapChip(t){ return `<span class="chip" style="background:${TAHAP_WARNA[t]}33;color:${t>=5?'var(--good)':t>=4?'var(--accent)':t>=2?'var(--warn)':'var(--muted)'}">${esc(TAHAP[t])}</span>`; }
+function tahapBar(us,big){
+  const n=us.length||1, c=TAHAP.map((_,i)=>us.filter(u=>u.tahap===i).length);
+  return `<div class="stack${big?' big':''}" title="${TAHAP.map((t,i)=>t+': '+c[i]).join(' · ')}">${c.map((v,i)=>v?`<i style="width:${v/n*100}%;background:${TAHAP_WARNA[i]}"></i>`:'').join('')}</div>`;
+}
+function fisikFilter(){
+  return C.fUnit.filter(u=>(!FF.prk||String(u.id_sub).startsWith(FF.prk+'|'))&&(!FF.sub||u.id_sub===FF.sub)&&(!FF.sheet||u.sheet===FF.sheet)&&(!FF.up3||u.up3===FF.up3)
+    &&(FF.tahap===''||u.tahap===+FF.tahap)&&(!FF.cek||(FF.cek==='lewat'?u.lewat:FF.cek==='perkiraan'?u.sub_perkiraan:u.validasi&&u.validasi!=='OK'))
+    &&(!FF.q||(u.lokasi+' '+u.penyulang+' '+u.ulp+' '+u.gi+' '+u.jenis+' '+u.no_kontrak).toLowerCase().includes(FF.q.toLowerCase())));
+}
+function vFisik(){
+  const F=D.FISIK;
+  if(F.error){ $('#view').innerHTML=`<h2>Progres fisik</h2><div class="msg bad">${esc(F.error)}</div>`; return; }
+  const U=fisikFilter(), P=C.fPaket.filter(p=>(!FF.prk||String(p.id_sub).startsWith(FF.prk+'|'))&&(!FF.sub||p.id_sub===FF.sub)&&(!FF.q||(p.uraian+' '+p.no_kontrak).toLowerCase().includes(FF.q.toLowerCase())));
+  const n=U.length||1, ge=t=>U.filter(u=>u.tahap>=t).length, ops=ge(5);
+  const sheets=[...new Set(U.map(u=>u.sheet))].sort();
+  // target per jenis: dari TARGET_UP3 (bila filter UP3 aktif, pakai target UP3 tersebut)
+  const tgt=(sh,j)=>{ const t=F.TARGET.find(x=>x.sheet===sh&&x.jenis===j); if(!t) return null; return FF.up3?num(t.per_up3[FF.up3]):num(t.total); };
+  const jenisRows=[]; sheets.forEach(sh=>{ [...new Set(U.filter(u=>u.sheet===sh).map(u=>u.jenis))].forEach(j=>jenisRows.push({sh,j,us:U.filter(u=>u.sheet===sh&&u.jenis===j),t:tgt(sh,j)})); });
+  F.TARGET.filter(t=>(!FF.sheet||t.sheet===FF.sheet)&&!FF.sub&&!FF.prk&&!jenisRows.some(r=>r.sh===t.sheet&&r.j===t.jenis)&&tgt(t.sheet,t.jenis)).forEach(t=>jenisRows.push({sh:t.sheet,j:t.jenis,us:[],t:tgt(t.sheet,t.jenis)}));
+  const subIds=[...new Set(C.fUnit.map(u=>u.id_sub).concat(C.fPaket.map(p=>p.id_sub)))].filter(x=>x);
+  const subRows=C.sub.filter(s=>subIds.includes(s.id_sub)&&(!FF.prk||s.id_prk===FF.prk));
+  const shown=U.slice(0,250), ed=canWrite('FISIK_UNIT');
+  $('#view').innerHTML=`<div class="pagehead"><div><h2>Potret progres fisik</h2><p>Dibaca langsung dari workbook MONITORING PROGRESS FISIK AI 2026 (sheet 01–14 per unit, 15 PAKET per paket). Setiap unit tercatat pada PRK dan sub PRK-nya.</p></div><div class="grow"></div>
+    ${ed?'<button type="button" class="primary" onclick="editUnit()">Tambah unit</button>':''}${canWrite('FISIK_PAKET')?'<button type="button" onclick="editFP()">Catat milestone paket</button>':''}</div>
+  <div class="panel filters">
+    <label for="ff_prk">PRK<select id="ff_prk">${opt(C.prk.map(p=>({v:p.id_prk,l:p.no_prk+' · '+tc(p.uraian).slice(0,30)})),FF.prk,'Semua PRK')}</select></label>
+    <label for="ff_sub">Sub PRK<select id="ff_sub">${opt(C.sub.filter(s=>subIds.includes(s.id_sub)&&(!FF.prk||s.id_prk===FF.prk)).map(s=>({v:s.id_sub,l:s.uraian})),FF.sub,'Semua sub PRK')}</select></label>
+    <label for="ff_sheet">Pekerjaan<select id="ff_sheet">${opt(F.PEKERJAAN.map(p=>({v:p.sheet,l:p.sheet.slice(0,2)+' · '+tc(p.judul)})),FF.sheet,'Semua pekerjaan')}</select></label>
+    <label for="ff_up3">UP3<select id="ff_up3">${opt(FUP3.map(c=>({v:c,l:c+' · '+(UP3_NAMA[c]||c)})),FF.up3,'Semua UP3')}</select></label>
+    <label for="ff_tahap">Tahap<select id="ff_tahap">${opt(TAHAP.map((t,i)=>({v:i,l:t})),FF.tahap,'Semua tahap')}</select></label>
+    <label for="ff_cek">Catatan<select id="ff_cek">${opt([{v:'lewat',l:'Lewat target operasi'},{v:'valid',l:'Validasi belum OK'},{v:'perkiraan',l:'Sub PRK perkiraan'}],FF.cek,'Semua')}</select></label>
+    <label for="ff_q">Cari<input id="ff_q" value="${esc(FF.q)}" placeholder="lokasi, penyulang, kontrak"></label></div>
+  <div class="tiles">
+    ${tile('Unit terdaftar',U.length,`${sheets.length} pekerjaan · ${new Set(U.map(u=>u.up3)).size} UP3`,'k','var(--navy)','var(--accent-soft)')}
+    ${tile('Terpasang',ge(4),pct(ge(4)/n)+' dari unit terdaftar','p','#5cb8e6','var(--accent-soft)',ge(4)/n)}
+    ${tile('Beroperasi',ops,pct(ops/n)+' dari unit terdaftar','s','var(--teal)','var(--teal-soft)',ops/n)}
+    ${tile('BAPP/BAST',ge(6),pct(ge(6)/n),'b','var(--good)','var(--good-soft)',ge(6)/n)}
+    ${tile('Lewat target',U.filter(u=>u.lewat).length,'target terlewati, belum beroperasi','p','var(--bad)','var(--bad-soft)')}
+    ${tile('Paket lumpsum',P.length?pct(P.reduce((t,p)=>t+p.pct,0)/P.length):'-',`${P.length} paket · rata-rata fisik terbobot`,'r','#6b5bd3','#ecebfb')}</div>
+  <div class="panel"><h3>Tahapan unit</h3>${tahapBar(U,1)}<div class="legend" style="margin-top:8px">${TAHAP.map((t,i)=>`<span><i style="background:${TAHAP_WARNA[i]}"></i>${t} · <b style="color:var(--ink)">${U.filter(u=>u.tahap===i).length}</b></span>`).join('')}</div></div>
+  <div class="panel scroll"><h3>Status per jenis peralatan</h3><table><thead><tr><th>Jenis</th><th class="n">Target</th><th class="n">Terdaftar</th><th style="width:150px">Tahapan</th><th class="n">Beroperasi</th><th class="n">% thd target</th></tr></thead><tbody>
+    ${jenisRows.map(r=>{const o=r.us.filter(u=>u.tahap>=5).length; return `<tr class="click" onclick="FF.sheet='${esc(r.sh)}';FF.q='';vFisik()"><td><div style="font-weight:600">${esc(r.j)}</div><div class="muted" style="font-size:11.5px">${esc(r.sh)}</div></td><td class="n">${r.t===null?'-':rp(r.t)}</td><td class="n">${r.us.length}</td><td>${tahapBar(r.us)}</td><td class="n">${o}</td>
+      <td class="n" style="font-weight:600">${r.t?pct(o/r.t):'-'}</td></tr>`;}).join('')||'<tr><td colspan="6" class="muted">Tidak ada unit pada filter ini.</td></tr>'}</tbody></table></div>
+  <div class="panel"><h3>Sebaran per UP3</h3><div class="chartbox" style="height:340px"><canvas id="chf"></canvas></div></div>
+  <div class="panel scroll"><h3>Rekap per sub PRK: fisik dan anggaran</h3><table><thead><tr><th>Sub PRK</th><th>Pekerjaan</th><th class="n">Unit</th><th style="width:150px">Beroperasi</th><th class="n">Paket lumpsum</th><th class="n">AI Rencana</th><th class="n">Terkontrak</th><th style="width:140px">Serapan kontrak</th></tr></thead><tbody>
+   ${subRows.map(s=>{const sh=[...new Set(C.fUnit.filter(u=>u.id_sub===s.id_sub).map(u=>u.sheet.slice(0,2)))].join(', '); return `<tr class="click" onclick="FF.sub='${esc(s.id_sub)}';vFisik()"><td><div style="font-weight:600">${esc(s.uraian)}</div><div class="muted" style="font-size:11.5px">${esc(s.no_prk)}</div></td><td>${esc(sh)||'-'}</td><td class="n">${s.fUnit}</td>
+    <td>${s.fUnit?meter(s.fOps/s.fUnit):'<span class="muted">-</span>'}</td><td class="n">${s.fPaket?s.fPaket+' · '+pct(s.fPaketPct):'-'}</td><td class="n">${rp(s.ai)}</td><td class="n">${rp(s.kontrak)}</td><td>${meter(s.serapan)}</td></tr>`;}).join('')}</tbody></table></div>
+  <div class="panel scroll"><div class="row" style="margin-bottom:8px"><h3 style="margin:0">Daftar unit</h3><span class="muted">${U.length>shown.length?`menampilkan ${shown.length} dari ${U.length}; persempit dengan filter`:U.length+' unit'}</span></div>
+   <table><thead><tr><th>Jenis / pekerjaan</th><th>UP3 · ULP</th><th>Lokasi</th><th>Sub PRK · kontrak</th><th>Target</th><th>Terpasang</th><th>Beroperasi</th><th>BAST</th><th>Tahap</th><th>Validasi</th><th></th></tr></thead><tbody>
+   ${shown.map(u=>`<tr><td><div style="font-weight:600">${esc(u.jenis)}</div><div class="muted" style="font-size:11.5px">${esc(u.sheet)}</div></td><td>${esc(u.up3)}<div class="muted" style="font-size:11.5px">${esc(u.ulp)}</div></td><td>${esc(u.lokasi)}<div class="muted" style="font-size:11.5px">${esc([u.penyulang,u.gi].filter(x=>x).join(' · '))}</div></td>
+    <td style="max-width:220px"><div style="font-size:12px">${esc(subNama(u.id_sub))}${u.sub_perkiraan?' <span class="chip warn">perkiraan</span>':''}</div><div class="muted mono" style="font-size:11px">${esc(u.no_kontrak||'kontrak belum ada')}</div></td>
+    <td style="white-space:nowrap">${esc(u.target_operasi||'-')}${u.lewat?'<br><span class="chip bad">Lewat</span>':''}</td><td style="white-space:nowrap">${esc(u.tgl_terpasang||'-')}</td><td style="white-space:nowrap">${esc(u.tgl_operasi||'-')}</td><td style="white-space:nowrap">${esc(u.tgl_bast||'-')}</td><td>${tahapChip(u.tahap)}</td>
+    <td style="font-size:12px;max-width:180px">${!u.validasi||u.validasi==='OK'?'<span class="chip good">OK</span>':`<span style="color:var(--warn)">${esc(u.validasi)}</span>`}</td>
+    <td>${ed?`<button type="button" onclick="editUnit('${esc(u.id)}')">Ubah</button>`:''}</td></tr>`).join('')||'<tr><td colspan="11" class="muted">Tidak ada unit pada filter ini.</td></tr>'}</tbody></table></div>
+  <div class="panel scroll"><h3>Paket lumpsum (15 PAKET) · bobot ${D.FISIK.BOBOT.map(b=>pct(b)).join(' / ')}</h3><table><thead><tr><th>Kontrak · uraian</th><th>Sub PRK</th><th>Akhir kontrak</th><th>Milestone</th><th style="width:140px">% Fisik</th><th>Tahap</th><th>Validasi</th><th></th></tr></thead><tbody>
+   ${P.map(p=>{const k=C.kontrak.find(x=>String(x.no_kontrak).trim().toUpperCase()===String(p.no_kontrak).trim().toUpperCase()); return `<tr><td><div style="font-weight:600">${esc(tc(p.uraian).slice(0,90))}</div><div class="muted mono" style="font-size:11px">${esc(p.no_kontrak)} · ${esc(p.vendor)}</div></td><td style="font-size:12px">${esc(subNama(p.id_sub))}</td>
+    <td style="white-space:nowrap">${esc(k?k.akhirBerlaku:p.akhir_kontrak)}<br>${k?sisaChip(k):''}</td><td><div class="dots">${p.done.map((d,i)=>`<i class="${d?'on':''}" title="${MILESTONE[i][1]}: ${esc(p[MILESTONE[i][0]]||'belum')}"></i>`).join('')}</div><div class="muted" style="font-size:11px">${MILESTONE.map(m=>m[1]).join(' · ')}</div></td>
+    <td>${meter(p.pct)}</td><td>${esc(p.tahapNama)}</td><td style="font-size:12px">${!p.validasi||p.validasi==='OK'?'<span class="chip good">OK</span>':`<span style="color:var(--warn)">${esc(p.validasi)}</span>`}</td>
+    <td>${canWrite('FISIK_PAKET')?`<button type="button" onclick="editFP('${esc(p.id)}')">Ubah</button>`:''}</td></tr>`;}).join('')||'<tr><td colspan="8" class="muted">Tidak ada paket pada filter ini.</td></tr>'}</tbody></table></div>`;
+  [['prk','change'],['sub','change'],['sheet','change'],['up3','change'],['tahap','change'],['cek','change'],['q','change']].forEach(([k,ev])=>$('#ff_'+k).addEventListener(ev,e=>{ FF[k]=e.target.value; if(k==='prk') FF.sub=''; vFisik(); }));
+  if(!window.Chart){ $('#chf').parentNode.innerHTML='<div class="muted">Grafik tidak bisa dimuat (pustaka grafik tidak tersedia).</div>'; return; }
+  const css=getComputedStyle(document.documentElement), col=v=>css.getPropertyValue(v).trim();
+  const grp=[[0,3,'Belum terpasang','#e0a21b'],[4,4,'Terpasang','#5cb8e6'],[5,5,'Beroperasi','#00a4a7'],[6,6,'BAPP/BAST','#16794a']];
+  const ups=FUP3.filter(c=>U.some(u=>u.up3===c));
+  chart=new Chart($('#chf'),{type:'bar',data:{labels:ups,datasets:grp.map(([a,b,l,c])=>({label:l,data:ups.map(x=>U.filter(u=>u.up3===x&&u.tahap>=a&&u.tahap<=b).length),backgroundColor:c,borderRadius:3}))},
+    options:{maintainAspectRatio:false,animation:false,scales:{y:{stacked:true,grid:{color:col('--line')},ticks:{color:col('--muted'),precision:0}},x:{stacked:true,grid:{display:false},ticks:{color:col('--ink'),font:{weight:'600'}}}},
+    plugins:{legend:{position:'bottom',labels:{color:col('--ink'),boxWidth:12,usePointStyle:true}},tooltip:{callbacks:{title:c=>c[0].label+' · '+(UP3_NAMA[c[0].label]||'')}}}}});
+}
+async function saveFisik(sh, rec){
+  if(!canWrite(sh)){ toast('Peran Anda tidak boleh mengubah data ini.','bad'); return null; }
+  let out={...rec};
+  if(CFG.api){
+    try{ const j=await post({sesi:SESI,action:'upsert',sheet:sh,record:rec});
+      if(j.kode==='SESI'){ close_(); setSesi(''); showLogin('Sesi berakhir. Perubahan terakhir belum tersimpan.'); return null; }
+      if(!j.ok){ toast(j.error,'bad'); return null; } out=j.record;
+    }catch(e){ toast('Gagal menyimpan: '+e.message,'bad'); return null; }
+  } else if(!out.id){ out.id=(sh==='FISIK_UNIT'?out.sheet:'15 PAKET')+'!demo'+Date.now(); }
+  const L=sh==='FISIK_UNIT'?D.FISIK.UNIT:D.FISIK.PAKET; const i=L.findIndex(x=>x.id===rec.id||x.id===out.id);
+  if(sh==='FISIK_UNIT'){ const k=C.kontrak.find(x=>x.no_kontrak&&x.no_kontrak===out.no_kontrak); out.id_sub=(k&&k.id_sub)||out.id_sub; out.sub_perkiraan=''; }
+  else { const k=C.kontrak.find(x=>x.no_kontrak===out.no_kontrak); out.id_sub=(k&&k.id_sub)||out.id_sub||''; if(k){ out.uraian=out.uraian||k.paket.nama_paket||''; out.vendor=out.vendor||k.vendor; out.akhir_kontrak=out.akhir_kontrak||k.akhir; } }
+  if(i>=0) L[i]={...L[i],...out}; else L.push(out);
+  calc(); vFisik(); toast(CFG.api?'Tersimpan ke workbook progres fisik':'Tersimpan di mode demo (tidak masuk spreadsheet)','good'); return out;
+}
+function kontrakOpts(idSub){
+  return C.kontrak.filter(k=>k.no_kontrak&&(!idSub||k.id_sub===idSub||k.paket.id_sub===idSub)).map(k=>({v:k.no_kontrak,l:`${k.no_kontrak} · ${k.vendor}`}));
+}
+function editUnit(id){
+  const F=D.FISIK, u=id?F.UNIT.find(x=>x.id===id):{sheet:FF.sheet||'',id_sub:FF.sub||'',up3:FF.up3||''};
+  const sheet0=u.sheet||(F.PEKERJAAN[0]||{}).sheet||'';
+  if(!id) u.sheet=sheet0;
+  const jenisOf=sh=>{ const L=(F.JENIS[sh]||[]).slice(); if(u.jenis&&!L.includes(u.jenis)) L.unshift(u.jenis); return L; };
+  const kOpts=kontrakOpts(u.id_sub); if(u.no_kontrak&&!kOpts.some(o=>o.v===u.no_kontrak)) kOpts.unshift({v:u.no_kontrak,l:u.no_kontrak+' (tidak ada di daftar kontrak)'});
+  form(id?`Ubah unit: ${u.lokasi}`:'Tambah unit progres fisik',[
+    {k:'sheet',label:'Pekerjaan (sheet)',type:'select',req:1,options:F.PEKERJAAN.map(p=>({v:p.sheet,l:p.sheet+' · '+tc(p.judul)})),def:sheet0,ro:!!id},
+    {k:'jenis',label:'Jenis peralatan',type:'select',req:1,options:jenisOf(sheet0),blank:'Pilih jenis'},
+    {k:'id_sub',label:'Sub PRK',type:'select',req:1,options:C.sub.map(s=>({v:s.id_sub,l:s.no_prk.replace('2026.DJBT.','')+' · '+s.uraian})),blank:'Pilih sub PRK',wide:1},
+    {k:'no_kontrak',label:'No kontrak jasa',type:'select',options:kOpts,blank:'Belum ada kontrak',wide:1},
+    {k:'up3',label:'Kode UP3',type:'select',req:1,options:FUP3.map(c=>({v:c,l:c+' · '+(UP3_NAMA[c]||c)})),blank:'Pilih UP3'},
+    {k:'ulp',label:'ULP'},{k:'penyulang',label:'Penyulang'},{k:'gi',label:'GI'},
+    {k:'lokasi',label:'Lokasi / nama titik',req:1,wide:1},{k:'no_kr',label:'No KR material'},
+    {k:'target_operasi',label:'Target operasi',type:'date'},{k:'tgl_terpasang',label:'Tgl terpasang',type:'date'},{k:'tgl_operasi',label:'Tgl beroperasi',type:'date'},{k:'tgl_bast',label:'Tgl BAPP/BAST',type:'date'},
+    {k:'evidence',label:'Evidence (link foto / BA)',wide:1},{k:'keterangan',label:'Keterangan / kendala',type:'textarea',wide:1}],u,
+  Object.assign(async o=>{ if(id){ o.id=id; o.sheet=u.sheet; } const r=await saveFisik('FISIK_UNIT',o); if(!r) return false; },
+   {check:o=>{ if(o.tgl_operasi&&o.tgl_terpasang&&o.tgl_operasi<o.tgl_terpasang) return 'Tanggal beroperasi sebelum tanggal terpasang. Perbaiki dulu.';
+     if(o.tgl_operasi&&o.tgl_operasi>TODAY) return 'Tanggal beroperasi setelah hari ini. Perbaiki dulu.';
+     const w=[]; if(o.tgl_operasi&&!o.evidence) w.push('beroperasi tanpa evidence'); if(o.tgl_bast&&!o.tgl_operasi) w.push('BAST tanpa tanggal operasi'); if(!o.target_operasi) w.push('target operasi kosong');
+     return w.length?'Catatan: '+w.join(', ')+'. Klik Simpan lagi untuk tetap menyimpan.':null; }}),
+   `Data ditulis ke sheet pekerjaan di workbook progres fisik (kolom input saja). Status, sub PRK dari kontrak, vendor, dan validasi tetap dihitung rumus di sheet. Bila kontrak jasa belum ada, sub PRK yang dipilih dicatat di kolom Sub-PRK.${u.sub_perkiraan?' <b>Sub PRK unit ini masih perkiraan</b>; pilih sub PRK yang benar lalu simpan.':''}`,
+  ()=>{ const sj=$('#f_jenis'), ss=$('#f_id_sub'), sk=$('#f_no_kontrak');
+    $('#f_sheet').addEventListener('change',e=>{ sj.innerHTML=opt(jenisOf(e.target.value),'', 'Pilih jenis'); });
+    ss.addEventListener('change',e=>{ const cur=sk.value; sk.innerHTML=opt(kontrakOpts(e.target.value),cur,'Belum ada kontrak'); });
+    sk.addEventListener('change',e=>{ const k=C.kontrak.find(x=>x.no_kontrak===e.target.value); if(k&&k.id_sub) ss.value=k.id_sub; }); });
+}
+function editFP(id){
+  const F=D.FISIK, p=id?F.PAKET.find(x=>x.id===id):{};
+  const used=new Set(F.PAKET.map(x=>String(x.no_kontrak).trim().toUpperCase()));
+  const kOpts=C.kontrak.filter(k=>k.no_kontrak&&(id||!used.has(String(k.no_kontrak).trim().toUpperCase()))).map(k=>({v:k.no_kontrak,l:`${k.no_kontrak} · ${k.vendor} · ${(k.paket.nama_paket||'').slice(0,40)}`}));
+  if(p.no_kontrak&&!kOpts.some(o=>o.v===p.no_kontrak)) kOpts.unshift({v:p.no_kontrak,l:p.no_kontrak});
+  form(id?'Ubah milestone paket: '+tc(p.uraian).slice(0,50):'Catat milestone paket lumpsum',[
+    {k:'no_kontrak',label:'Kontrak',type:'select',req:1,options:kOpts,blank:'Pilih kontrak',wide:1,ro:!!id},
+    {k:'tgl_material',label:`Material tiba / delivery (${pct(F.BOBOT[0])})`,type:'date'},{k:'tgl_terpasang',label:`Terpasang / instalasi (${pct(F.BOBOT[1])})`,type:'date'},
+    {k:'tgl_komisioning',label:`Komisioning / uji terima (${pct(F.BOBOT[2])})`,type:'date'},{k:'tgl_bast',label:`BAST (${pct(F.BOBOT[3])})`,type:'date'},
+    {k:'evidence',label:'Evidence (link)',wide:1},{k:'keterangan',label:'Keterangan',type:'textarea',wide:1}],p,
+  Object.assign(async o=>{ if(id){ o.id=id; o.no_kontrak=p.no_kontrak; } const r=await saveFisik('FISIK_PAKET',o); if(!r) return false; },
+   {check:o=>{ const d=MILESTONE.map(m=>o[m[0]]); for(let i=1;i<4;i++) if(d[i]&&d[i-1]&&d[i]<d[i-1]) return `Urutan terbalik: ${MILESTONE[i][1]} sebelum ${MILESTONE[i-1][1]}. Perbaiki dulu.`;
+     if(o.tgl_bast&&!o.evidence) return 'BAST tanpa evidence. Klik Simpan lagi untuk tetap menyimpan.'; return null; }}),
+   'Ditulis ke sheet 15 PAKET (satu baris per kontrak). % fisik = jumlah bobot milestone yang sudah bertanggal.');
+}
+
+/* ===== Tampilan: Pembayaran ===== */
+function vBayar(){
+  const bl=[...Array(12)].map((_,m)=>m+1);
+  const real=m=>D.BAYAR.filter(b=>b.tgl_bayar&&+String(b.tgl_bayar).slice(5,7)===m).reduce((t,b)=>t+num(b.nilai),0);
+  const plot=m=>D.PLOT_AKI.filter(a=>num(a.bulan)===m).reduce((t,a)=>t+num(a.nilai),0);
+  let cr=0,cp=0;
+  $('#view').innerHTML=`<div class="row"><h2>Pembayaran dan serapan kas</h2><div class="grow"></div>${canWrite('BAYAR')?'<button class="primary" type="button" onclick="editBayar()">Catat pembayaran</button>':''}${canWrite('PLOT_AKI')?'<button type="button" onclick="editAki()">Isi plot AKI</button>':''}</div>
+  <div class="tiles"><div class="tile"><div class="l">Terbayar</div><div class="v">${M(C.tot.bayar)}</div></div><div class="tile"><div class="l">Belum terbayar dari nilai kontrak</div><div class="v">${M(C.kontrak.reduce((t,k)=>t+k.berlaku-k.bayar,0))}</div></div>
+   <div class="tile"><div class="l">Siap tagih</div><div class="v">${C.kontrak.filter(k=>k.tgl_bast&&k.bayar<k.berlaku).length}</div><div class="n">kontrak sudah BAST, belum lunas</div></div></div>
+  <div class="panel scroll"><h3>Realisasi kas vs plot AKI per bulan (Rp)</h3><table><thead><tr><th>Bulan</th><th class="n">Plot AKI</th><th class="n">Realisasi</th><th class="n">Kumulatif plot</th><th class="n">Kumulatif realisasi</th><th>Capaian kumulatif</th></tr></thead><tbody>
+   ${bl.map(m=>{cr+=real(m);cp+=plot(m);return `<tr><td>${new Date(2026,m-1,1).toLocaleDateString('id-ID',{month:'long'})}</td><td class="n">${rp(plot(m))}</td><td class="n">${rp(real(m))}</td><td class="n">${rp(cp)}</td><td class="n">${rp(cr)}</td><td>${cp?meter(cr/cp):'<span class="muted">plot belum diisi</span>'}</td></tr>`}).join('')}</tbody></table></div>
+  <div class="panel scroll"><h3>Daftar pembayaran</h3>${D.BAYAR.length?`<table><thead><tr><th>Tgl bayar</th><th>Kontrak</th><th>Vendor</th><th>Termin</th><th class="n">Nilai</th><th></th></tr></thead><tbody>${D.BAYAR.slice().sort((a,b)=>String(b.tgl_bayar).localeCompare(a.tgl_bayar)).map(b=>{const k=C.kById[b.id_kontrak]||{};return `<tr><td>${esc(b.tgl_bayar)}</td><td class="mono" style="font-size:12px">${esc(k.no_kontrak)}</td><td>${esc(k.vendor)}</td><td>${esc(b.termin)}</td><td class="n">${rp(b.nilai)}</td><td>${canWrite('BAYAR')?`<button type="button" onclick="editBayar('${b.id_bayar}')">Ubah</button>`:''}</td></tr>`}).join('')}</tbody></table>`:'<div class="muted">Belum ada pembayaran tercatat untuk 2026.</div>'}</div>`;
+}
+function editBayar(id){
+  const b=id?D.BAYAR.find(x=>x.id_bayar===id):{termin:'Termin 1'};
+  form(id?'Ubah pembayaran':'Catat pembayaran',[{k:'id_kontrak',label:'Kontrak',type:'select',options:C.kontrak.map(k=>({v:k.id_kontrak,l:`${k.no_kontrak} · ${k.vendor} (sisa Rp ${rp(k.berlaku-k.bayar)})`})),req:1,wide:1},
+   {k:'termin',label:'Termin',type:'select',options:['Termin 1','Termin 2','Termin 3','Pelunasan','Bulanan']},{k:'tgl_tagih',label:'Tanggal tagih',type:'date'},{k:'tgl_bayar',label:'Tanggal bayar',type:'date',req:1},{k:'nilai',label:'Nilai bayar (Rp)',type:'number',req:1},{k:'bukti',label:'Bukti / nomor dokumen',wide:1}],b,
+  Object.assign(async o=>{ const k=C.kById[o.id_kontrak]; o.id_sub=k.id_sub||k.paket.id_sub; o.oleh=USER.email||USER.nama;
+    const sudah=D.BAYAR.filter(x=>x.id_kontrak===o.id_kontrak&&x.id_bayar!==o.id_bayar).reduce((t,x)=>t+num(x.nilai),0);
+    if(sudah+num(o.nilai)>k.berlaku+1){ toast(`Total bayar melebihi nilai kontrak berlaku (Rp ${rp(k.berlaku)}).`,'bad'); return false; }
+    const r=await save('BAYAR',o); if(!r) return false;
+    if(sudah+num(o.nilai)>=k.berlaku-1) await save('PAKET',{...k.paket,status:'Terbayar'}); route(); },
+   {check:o=>o.tgl_tagih&&o.tgl_bayar&&o.tgl_tagih>o.tgl_bayar?'Tanggal tagih setelah tanggal bayar. Klik Simpan lagi untuk tetap menyimpan.':null}));
+}
+function editAki(){
+  form('Isi plot AKI per bulan',[{k:'id_prk',label:'PRK',type:'select',options:D.PRK.map(p=>({v:p.id_prk,l:p.no_prk+' '+p.uraian})),req:1,wide:1}].concat([...Array(12)].map((_,m)=>({k:'b'+(m+1),label:new Date(2026,m,1).toLocaleDateString('id-ID',{month:'long'})+' (Rp)',type:'number',def:0}))),{},
+  async o=>{ for(let m=1;m<=12;m++){ const ex=D.PLOT_AKI.find(a=>a.id_prk===o.id_prk&&num(a.bulan)===m); if(num(o['b'+m])||ex){ const r=await save('PLOT_AKI',{id_prk:o.id_prk,bulan:m,nilai:num(o['b'+m])}); if(!r) return false; } } route(); });
+}
+
+/* ===== Login ===== */
+function showLogin(msg){
+  D=null; USER=null; $('#app').classList.add('solo'); $('#nav').hidden=true; $('#topbar').hidden=true; $('#btnPass').hidden=true; $('#btnLogout').hidden=true; $('#who').textContent='';
+  $('#view').innerHTML=`<div class="login"><div class="logincard">
+    <div class="loginbrand"><div class="logos"><img src="logo-pln.png" alt="PLN" onerror="this.remove()"><span class="div"></span><img src="logo-danantara.png" alt="Danantara Indonesia" onerror="this.remove()"></div><svg width="44" height="48" viewBox="0 0 20 22" aria-hidden="true"><path d="M12 1L2 13h7l-2 8 11-13h-7z" fill="#ffc72c"/></svg>
+      <h2>Pengelolaan Anggaran AI/AO</h2><p>UP2D Jawa Timur · Tahun anggaran 2026</p>
+      <p style="margin-top:auto;font-size:12.5px">Pagu, proyeksi terkontrak, paket, amandemen, progres fisik, dan pembayaran dalam satu tempat, langsung dari workbook MONITORING SKKI dan MONITORING PROGRESS FISIK.</p><div class="chev">››</div></div>
+    <div class="loginform"><h2>Masuk</h2><div class="muted">Gunakan username dan password dari Admin Perencanaan.</div>
+    ${msg?`<div class="msg info">${esc(msg)}</div>`:''}
+    <form id="lf" class="form" style="grid-template-columns:1fr" novalidate>
+      <label for="l_user">Username<input id="l_user" autocomplete="username" autocapitalize="none" required></label>
+      <label for="l_pass">Password<input id="l_pass" type="password" autocomplete="current-password" required></label>
+      <div id="l_err"></div>
+      <button class="primary" type="submit" id="l_btn" style="padding:10px">Masuk</button>
+    </form></div></div></div>`;
+  $('#l_user').focus();
+  $('#lf').addEventListener('input',()=>$('#l_err').innerHTML='');
+  $('#lf').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const u=$('#l_user').value.trim(), p=$('#l_pass').value;
+    if(!u||!p){ $('#l_err').innerHTML='<div class="msg bad">Isi username dan password.</div>'; return; }
+    $('#l_btn').disabled=true; $('#l_btn').textContent='Memeriksa…';
+    try{
+      const j=await post({action:'login',username:u,password:p});
+      if(!j.ok){ $('#l_err').innerHTML=`<div class="msg bad">${esc(j.error)}</div>`; return; }
+      setSesi(j.sesi); await load();
+      if(j.wajib_ganti) gantiPassword(true);
+    }catch(x){ $('#l_err').innerHTML='<div class="msg bad">Tidak bisa terhubung ke server. Periksa koneksi internet.</div>'; }
+    finally{ const b=$('#l_btn'); if(b){ b.disabled=false; b.textContent='Masuk'; } }
+  });
+}
+function gantiPassword(wajib){
+  modal(`<div class="head"><h2>Ganti password</h2>${wajib?'':'<button type="button" onclick="close_()">Tutup</button>'}</div>
+  ${wajib?'<div class="msg warn">Anda masuk dengan password awal dari Admin. Buat password pribadi sekarang.</div>':''}
+  <form id="pf" class="form" style="grid-template-columns:1fr" novalidate>
+    <label for="p_old">Password saat ini<input id="p_old" type="password" autocomplete="current-password"></label>
+    <label for="p_new">Password baru (minimal 8 karakter)<input id="p_new" type="password" autocomplete="new-password"></label>
+    <label for="p_new2">Ulangi password baru<input id="p_new2" type="password" autocomplete="new-password"></label>
+    <div id="p_err"></div><div class="row"><button class="primary" type="submit">Simpan password</button></div></form>`);
+  $('#pf').addEventListener('input',()=>$('#p_err').innerHTML='');
+  $('#pf').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const a=$('#p_old').value,b=$('#p_new').value,c=$('#p_new2').value;
+    const err=t=>$('#p_err').innerHTML=`<div class="msg bad">${esc(t)}</div>`;
+    if(!a) return err('Isi password saat ini.'); if(b.length<8) return err('Password baru minimal 8 karakter.'); if(b!==c) return err('Ulangan password baru tidak sama.'); if(a===b) return err('Password baru harus berbeda dari yang lama.');
+    try{ const j=await post({sesi:SESI,action:'ganti_password',lama:a,baru:b});
+      if(j.kode==='SESI'){ close_(); setSesi(''); showLogin('Sesi berakhir. Login lagi lalu ganti password.'); return; }
+      if(!j.ok) return err(j.error); close_(); toast('Password berhasil diganti','good');
+    }catch(x){ err('Tidak bisa terhubung ke server.'); }
+  });
+}
+async function logout(){
+  try{ if(CFG.api&&SESI) await post({sesi:SESI,action:'logout'}); }catch(e){}
+  setSesi(''); showLogin('Anda sudah keluar.');
+}
+
+/* ===== Pengaturan ===== */
+function settings(){
+  modal(`<div class="head"><h2>Pengaturan koneksi</h2><button type="button" onclick="close_()">Tutup</button></div>
+  <div class="msg info">URL API adalah alamat /exec dari deployment Apps Script. Bila URL sudah ditanam di index.html, pengaturan ini tidak perlu diisi.</div>
+  <form id="sf" class="form"><label class="wide" for="s_api">URL API Apps Script<input id="s_api" value="${esc(CFG.api)}" placeholder="https://script.google.com/macros/s/…/exec"${API_URL?' readonly':''}></label>
+  <div class="wide row">${API_URL?'':'<button class="primary" type="submit">Simpan dan muat</button>'}${DEMO_DATA?'<button type="button" id="s_demo">Pakai mode demo</button>':''}</div></form>`);
+  $('#sf').addEventListener('submit',e=>{e.preventDefault(); if(API_URL) return; CFG={api:$('#s_api').value.trim()}; try{localStorage.setItem('aiao_cfg',JSON.stringify(CFG));}catch(x){} close_(); load();});
+  const dm=$('#s_demo'); if(dm) dm.addEventListener('click',()=>{CFG={api:''}; try{localStorage.removeItem('aiao_cfg');}catch(x){} close_(); load();});
+}
+$('#btnSetting').addEventListener('click',settings);
+$('#btnReload').addEventListener('click',load);
+$('#btnPass').addEventListener('click',()=>gantiPassword(false));
+$('#btnLogout').addEventListener('click',logout);
+$('#btnIngat').addEventListener('click',()=>{ KF='ingat'; if(location.hash==='#kontrak') vKontrak(); else location.hash='#kontrak'; });
+if(API_URL) $('#btnSetting').hidden=true;
+load();
+</script>
+</body>
+</html>
